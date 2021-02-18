@@ -50,12 +50,20 @@
     }
 
     .form-signin input[type="text"] {
+        margin-bottom: 10px;
+    }
+
+    .form-signin input[type="email"] {
+        margin-bottom: 10px;
+    }
+
+    .form-signin input[name="password"] {
         margin-bottom: -1px;
         border-bottom-right-radius: 0;
         border-bottom-left-radius: 0;
     }
 
-    .form-signin input[type="password"] {
+    .form-signin input[name="password_confirmation"] {
         margin-bottom: 10px;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
@@ -87,45 +95,38 @@
         </div>
         @endif
 
-        @if(isset($fail) && $fail)
+        @if(isset($usernameExists))
         <div class="alert alert-danger alert-dismissible fade show text-start" role="alert" id="alert">
             <h5>Erreur</h5>
-            Nom d'utilisateur ou mot de passe incorrect.
+            Ce nom d'utilisateur est déjà pris.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
 
-        @if(isset($mustLogin) && $mustLogin)
+        @if(isset($emailExists))
         <div class="alert alert-danger alert-dismissible fade show text-start" role="alert" id="alert">
             <h5>Erreur</h5>
-            Vous devez être connecté(e) pour voir cette page.
+            Cette adresse e-mail est déjà prise.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
 
         <input name="username" type="text" class="form-control" placeholder="Nom d'utilisateur" autofocus required>
+        <input name="email" type="email" class="form-control" placeholder="Courriel" autofocus required>
         <input name="password" type="password" class="form-control" placeholder="Mot de passe" required>
-
+        <input name="password_confirmation" type="password" class="form-control" placeholder="Confirmation du mot de passe" required>
+        
         <div class="container mt-3 mb-4">
             <div class="row">
-                <div class="col text-start">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me">
-                        <label class="form-check-label" for="remember_me">
-                            Se souvenir de moi
-                        </label>
-                      </div>
-                </div>
                 <div class="col text-end">
-                    <a href="">Mot de passe oublié ?</a>
-                    <a href="{{ route('signup') }}">Pas encore inscrit(e) ?</a>
+                    <a href="{{ route('login') }}">Vous possédez déjà un compte ?</a>
                 </div>
             </div>
         </div>
-        
+
         <div class="d-grid gap-2">
-            <button class="btn btn-primary btn-lg" type="submit">Connexion</button>
-          </div>
+            <button class="btn btn-primary btn-lg" type="submit">Inscription</button>
+        </div>
     </form>
 </div>
 
