@@ -1,25 +1,14 @@
-@extends('base')
+@extends('layouts.app')
 
 @section('head')
 <style>
-    .content {
-        position: fixed;
-        align-items: center;
-        text-align: center;
-        left: 0;
-        right: 0;
-        z-index: 2;
-    }
-
     html,
     body {
         height: 100%;
     }
 
     body {
-        display: -ms-flexbox;
         display: flex;
-        -ms-flex-align: center;
         align-items: center;
         padding-top: 40px;
         padding-bottom: 40px;
@@ -28,7 +17,7 @@
 
     .form-signin {
         width: 100%;
-        max-width: 440px;
+        max-width: 460px;
         padding: 15px;
         margin: auto;
     }
@@ -49,84 +38,59 @@
         z-index: 2;
     }
 
-    .form-signin input[type="text"] {
+    .form-signin input[name="username"] {
         margin-bottom: -1px;
         border-bottom-right-radius: 0;
         border-bottom-left-radius: 0;
     }
-
-    .form-signin input[type="password"] {
+    
+    .form-signin input[name="password"] {
         margin-bottom: 10px;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
-
-    .title {
-        font-family: Pacifico;
-        font-size: 3em;
-    }
 </style>
 @endsection
 
-@section('body')
-<div class="content">
-    <form class="form-signin d-grip" method="post">
-        {{ csrf_field() }}
+@section('content')
+<main class="form-signin text-center">
+    <form method="POST">
+        @csrf
 
-        <h1 class="h2 mb-5 font-weight-normal title">{{ Config::get('app.name') }}</h1>
+        <h1 class="mb-5 fw-normal" style="font-family: Pacifico, sans-serif;">{{ Config::get('app.name') }}</h1>
 
         @if($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show text-start" role="alert" id="alert">
-            <h5>Erreur</h5>
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div class="text-start alert alert-danger alert-dismissible fade show" role="alert">
+            <h5>Error</h5>
+            Incorrect username or password.
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        @endif
+        @enderror
 
-        @if(isset($fail) && $fail)
-        <div class="alert alert-danger alert-dismissible fade show text-start" role="alert" id="alert">
-            <h5>Erreur</h5>
-            Nom d'utilisateur ou mot de passe incorrect.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
+        <label for="inputusername" class="visually-hidden">Username</label>
+        <input name="username" type="text" id="inputusername" class="form-control" placeholder="Username" value="{{ old('username') }}" required @if(!old('username')) autofocus @endif>
+        <label for="inputPassword" class="visually-hidden">Password</label>
+        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required @if(old('username')) autofocus @endif>
 
-        @if(isset($mustLogin) && $mustLogin)
-        <div class="alert alert-danger alert-dismissible fade show text-start" role="alert" id="alert">
-            <h5>Erreur</h5>
-            Vous devez être connecté(e) pour voir cette page.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        @endif
-
-        <input name="username" type="text" class="form-control" placeholder="Nom d'utilisateur" autofocus required>
-        <input name="password" type="password" class="form-control" placeholder="Mot de passe" required>
-
-        <div class="container mt-3 mb-4">
+        <div class="container">
             <div class="row">
                 <div class="col text-start">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me">
-                        <label class="form-check-label" for="remember_me">
-                            Se souvenir de moi
+                        <input class="form-check-input" type="checkbox" value="" name="remember" id="rememberCheck">
+                        <label class="form-check-label" for="rememberCheck">
+                            Remember me
                         </label>
                       </div>
                 </div>
                 <div class="col text-end">
-                    <a href="">Mot de passe oublié ?</a>
-                    <a href="{{ route('signup') }}">Pas encore inscrit(e) ?</a>
+                    <a href="{{ route('password.request') }}">Forgot you password?</a>
+                    <br>
+                    <a href="{{ route('register') }}">Not registered yet?</a>
                 </div>
             </div>
         </div>
         
-        <div class="d-grid gap-2">
-            <button class="btn btn-primary btn-lg" type="submit">Connexion</button>
-          </div>
+        <button class="mt-4 btn btn-lg btn-primary w-100" type="submit">Log in</button>
     </form>
-</div>
-
+</main>
 @endsection
