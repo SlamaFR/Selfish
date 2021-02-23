@@ -19,7 +19,9 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'email',
+        'code',
         'password',
+        'admin'
     ];
 
     /**
@@ -39,5 +41,17 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'admin' => 'boolean'
     ];
+
+    public function admin($admin = null) {
+        if ($admin === null) {
+            return $this->getAttribute('admin');
+        }
+        return $this->setAttribute('admin', $admin);
+    }
+
+    public static function of($userCode) {
+        return User::where(['code' => $userCode])->firstOrFail();
+    }
 }
