@@ -26,7 +26,6 @@ Route::post('/mode/{mode}', function ($mode) {
     if ($mode == 'light' || $mode == 'dark') {
         Cookie::queue('theme', $mode, 525600);
     }
-    return back();
 })->name('mode');
 
 Route::group([
@@ -36,34 +35,26 @@ Route::group([
 
     Route::get('/upload', 'Pages\UploadController@index')->name('upload');
     Route::post('/upload', 'Pages\UploadController@uploadMedia');
-    Route::post('/upload/{mediaId}/toggle-visibility', 'Pages\UploadController@toggleVisibility');
-    Route::post('/upload/{mediaId}/delete', 'Pages\UploadController@delete');
+    Route::post('/{mediaCode}/delete', 'Pages\UploadController@delete');
+    Route::post('/{mediaCode}/toggle-visibility', 'Pages\UploadController@toggleVisibility');
 
-    Route::get('/config', 'Pages\ConfigController@index')->middleware('admin')->name('admin.config');
+    Route::group([
+        'middleware' => 'admin'
+    ], function () {
+        Route::get('/config', 'Pages\ConfigController@index')->name('admin.config');
+    });
 
     Route::get('/user/settings', 'User\SettingsController@index')->name('user.settings');
-    Route::post('/user/change-password', 'User\SettingsController@index');
+    Route::post('/user/change-password', 'User\SettingsController@updatePassword')->name('user.settings.password');
+    Route::post('/user/change-info', 'User\SettingsController@updateInfo')->name('user.settings.info');
+    Route::post('/user/change-display', 'User\SettingsController@updateDisplaySettings')->name('user.settings.display');
+    Route::post('/user/regenerate-token', 'User\SettingsController@regenerateToken')->name('user.token.regenerate');
+    Route::get('/user/external/sharex', 'User\SettingsController@ShareX')->name('user.external.sharex');
 });
 
-Route::get('/{userCode}/{mediaCode}', 'MediaController@view')->name('media.view');
-Route::get('/{userCode}/{mediaCode}/download', 'MediaController@download')->name('media.download');
-Route::get('/{userCode}/{mediaCode}/raw', 'MediaController@raw')->name('media.raw');
+Route::get('/{mediaCode}', 'MediaController@view')->name('media.view');
+Route::get('/{mediaCode}/download', 'MediaController@download')->name('media.download');
+Route::get('/{mediaCode}/raw', 'MediaController@raw')->name('media.raw');
 
-
-/*
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-
-// Logout Routes...
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-
-// Registration Routes...
-Route::get('signup', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('signup', 'Auth\RegisterController@register');
-
-// Password Reset Routes...
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
-*/
+Route::post('/upload/{token}', 'Pages\UploadController@uploadMediaToken');
+// Route::get('/{mediaCode}/delete/{token}', 'Pages\UploadController@deleteToken');

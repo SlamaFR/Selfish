@@ -8,13 +8,18 @@
     src: url(../fonts/Circular_Medium.woff);
 }
 
+.toast-body {
+    color: #212529!important;
+}
+
+.btn-icon .feather,
 .navbar .feather {
     margin-right: .5em;
 }
 
 .feather {
     width: 20px;
-    margin-top: -3px;
+    margin-top: -4px;
 }
 
 .btn-sm .feather {
@@ -30,11 +35,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 body {
+    --plyr-color-main: #343a40;
     font-family: "Circular", -apple-system, "Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+}
+
+body .container {
+    max-width: 1140px;
 }
 
 html {
     margin-left: calc(100vw - 100%);
+}
+
+th, td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+table td {
+    vertical-align: middle;
+    position: relative;
 }
 
 .navbar {

@@ -6,10 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Glorand\Model\Settings\Traits\HasSettingsField;
+use Illuminate\Support\Facades\Config;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasSettingsField;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +23,8 @@ class User extends Authenticatable
         'email',
         'code',
         'password',
-        'admin'
+        'admin',
+        'access_token'
     ];
 
     /**
@@ -44,14 +47,22 @@ class User extends Authenticatable
         'admin' => 'boolean'
     ];
 
-    public function admin($admin = null) {
-        if ($admin === null) {
-            return $this->getAttribute('admin');
-        }
-        return $this->setAttribute('admin', $admin);
+    public static function of($userCode)
+    {
+        return User::where(['code' => $userCode])->firstOrFail();
     }
 
-    public static function of($userCode) {
-        return User::where(['code' => $userCode])->firstOrFail();
+    public function sharexConfig()
+    {
+        return '{
+            "DestinationType": "ImageUploader, TextUploader, FileUploader",
+            "RequestMethod": "POST",
+            "RequestURL": "' . Config::get('app.url') .'/upload/' . $this->access_token . '",
+            "Body": "MultipartFormData",
+            "FileFormName": "file",
+            "URL": "$json:url$",
+            "ThumbnailURL": "$json:url$/raw",
+            "ErrorMessage": "$json:error$"
+          }';
     }
 }

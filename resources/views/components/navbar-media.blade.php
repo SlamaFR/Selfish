@@ -8,42 +8,37 @@
 
         <ul class="navbar-nav d-flex">
             <li class="nav-item">
-                @php
-                $currentMode = Cookie::get('theme', 'dark');
-                $nextMode = $currentMode == 'dark' ? 'light' : 'dark';
-                @endphp
-                <form action="{{ route('mode', ['mode' => $nextMode]) }}" method="post" id="form">
-                    @csrf
-                    <a class="nav-link" onclick="$('#form').submit()" style="cursor: pointer;">
-                        <i data-feather="{{ $currentMode == "dark" ? "sun" : "moon" }}"></i>
-                    </a>
-                </form>
+                <a class="nav-link" data-action="toggle-dark-mode">
+                    <i data-feather="{{ Cookie::get('theme', 'dark') == "dark" ? "sun" : "moon" }}"></i>
+                </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link copy" data-clipboard-text={{ route('media.view', ['userCode' => $user_code, 'mediaCode' => $media_code]) }}>
+                <a class="nav-link copy" data-clipboard-text={{ route('media.view', ['mediaCode' => $media_code]) }}>
                     <i data-feather="link"></i>
                 </a>
             </li>
             <li class="nav-item">
-                <a target="_blank" href="{{ route('media.download', ['userCode' => $user_code, 'mediaCode' => $media_code]) }}" class="nav-link">
+                <a href="{{ route('media.download', ['mediaCode' => $media_code]) }}" class="nav-link">
                     <i data-feather="download"></i>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ route('media.raw', ['userCode' => $user_code, 'mediaCode' => $media_code]) }}" class="nav-link">
+                <a href="{{ route('media.raw', ['mediaCode' => $media_code]) }}" class="nav-link">
                     <i data-feather="file-text"></i>
                 </a>
             </li>
-            <li class="nav-item" data-id="{{ $file->id }}" data-visible="{{ $file->visible() }}">
-                <a href="#" data-action="toggle-visibility" class="nav-link">
-                    <i data-feather="{{ $file->visible() ? "eye-off" : "eye"}}"></i>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i data-feather="trash-2"></i>
-                </a>
-            </li>
+            @if(!Auth::guest() && Auth::user()->code == $user_code || Auth::user()->admin)
+                <li class="nav-item" data-id="{{ $file->media_code }}" data-name="{{ $file->media_name }}" data-visible="{{ $file->visible }}">
+                    <a data-action="toggle-visibility" class="nav-link">
+                        <i data-feather="{{ $file->visible ? "eye-off" : "eye"}}"></i>
+                    </a>
+                </li>
+                <li class="nav-item" data-id="{{ $file->media_code }}" >
+                    <a data-action="delete-confirm" class="nav-link">
+                        <i data-feather="trash-2"></i>
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
   </nav>

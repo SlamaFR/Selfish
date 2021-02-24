@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('head')
+@section('head.styles')
 <style>
     html,
     body {
@@ -76,7 +76,7 @@
             <div class="row">
                 <div class="col text-start">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" name="remember" id="rememberCheck">
+                        <input class="form-check-input" type="checkbox" name="remember" id="rememberCheck">
                         <label class="form-check-label" for="rememberCheck">
                             Remember me
                         </label>

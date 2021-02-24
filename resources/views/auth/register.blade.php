@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('head')
+@section('head.styles')
 <style>
     html,
     body {

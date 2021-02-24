@@ -17,7 +17,7 @@ class Administrator
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guest() || !Auth::user()->admin())
+        if (Auth::guest() || !Auth::user()->admin)
         {
             return redirect('files');
         }

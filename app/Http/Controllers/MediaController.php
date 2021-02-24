@@ -11,48 +11,52 @@ use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
-    public function download($userCode, $mediaCode)
+    public function download($mediaCode)
     {
-        $file = Upload::of($userCode, $mediaCode);
+        $file = Upload::of($mediaCode);
 
-        if (!$file->visible()) {
+        if (!$file->visible) {
             if (Auth::guest()) return abort(404);
-            if (!Auth::user()->admin() && Auth::user()->code !== $file->user_code) return abort(404);
+            if (!Auth::user()->admin && Auth::user()->code !== $file->user_code) return abort(404);
         }
 
         return Storage::disk('public')->download($file->path(), $file->media_name);
     }
 
-    public function raw($userCode, $mediaCode)
+    public function raw($mediaCode)
     {
-        $file = Upload::of($userCode, $mediaCode);
+        $file = Upload::of($mediaCode);
 
-        if (!$file->visible()) {
+        if (!$file->visible) {
             if (Auth::guest()) return abort(404);
-            if (!Auth::user()->admin() && Auth::user()->code !== $file->user_code) return abort(404);
+            if (!Auth::user()->admin && Auth::user()->code !== $file->user_code) return abort(404);
         }
 
-        return Storage::disk('public')->response($file->path());
+        return Storage::disk('public')->response($file->path(), $file->media_name, ['Accept-Ranges' => 'bytes']);
     }
 
-    public function view($userCode, $mediaCode)
+    public function view($mediaCode)
     {
-        $file = Upload::of($userCode, $mediaCode);
+        $file = Upload::of($mediaCode);
 
-        if (!$file->visible()) {
+        if (!$file->visible) {
             if (Auth::guest()) return abort(404);
-            if (!Auth::user()->admin() && Auth::user()->code !== $file->user_code) return abort(404);
+            if (!Auth::user()->admin && Auth::user()->code !== $file->user_code) return abort(404);
         }
 
         $mimeType = Files::mimeType($file);
+        $type = Files::simplifyMimeType($mimeType);
+
+        if($file->owner->settings()->get("display." . $type) === 'raw') {
+            return $this->raw($mediaCode);
+        }
 
         return view('media', [
-            'user_code' => $userCode,
+            'user_code' => $file->user_code,
             'media_code' => $mediaCode,
-            'media_type' => Files::simplifyMimeType($mimeType),
+            'media_type' => $type,
             'mime_type' => $mimeType,
             'media_path' => route('media.raw', [
-                'userCode' => $userCode,
                 'mediaCode' => $mediaCode
             ]),
             'file' => $file,

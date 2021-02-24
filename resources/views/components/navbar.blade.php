@@ -7,7 +7,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 @foreach(Config::get('pages') as $route => $meta)
-                    @if(!$meta['admin'] || ($meta['admin'] && Auth::user()->admin()))
+                    @if(!$meta['admin'] || ($meta['admin'] && Auth::user()->admin))
                     <li class="nav-item">
                         <a class="nav-link @if(Route::currentRouteName() == $route) active @endif" href="{{ route($route) }}">
                             <i data-feather="{{ $meta['icon'] }}"></i>@lang('pages.' . $route)
@@ -25,16 +25,9 @@
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                       <li><a class="dropdown-item @if(Route::currentRouteName() == "user.settings") active @endif" href="{{ route('user.settings') }}"><i data-feather="settings"></i>Settings</a></li>
                       <li>
-                            @php
-                            $currentMode = Cookie::get('theme', 'dark');
-                            $nextMode = $currentMode == 'dark' ? 'light' : 'dark';
-                            @endphp
-                            <form action="{{ route('mode', ['mode' => $nextMode]) }}" method="post">
-                                @csrf
-                                <button class="dropdown-item" type="submit">
-                                    <i data-feather="{{ $currentMode == "dark" ? "sun" : "moon" }}"></i>{{ $currentMode == "dark" ? "Light" : "Dark" }} mode
-                                </button>
-                            </form>
+                        <button class="dropdown-item" data-action="toggle-dark-mode-text">
+                            <i data-feather="{{ Cookie::get('theme', 'dark') == "dark" ? "sun" : "moon" }}"></i>{{ Cookie::get('theme', 'dark') == "dark" ? "Light" : "Dark" }} mode
+                        </button>
                       </li>
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="{{ route('logout') }}"><i data-feather="log-out"></i>Log out</a></li>

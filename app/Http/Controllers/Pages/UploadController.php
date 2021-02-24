@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Upload;
+use App\Models\User;
 use App\Helpers\Files;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -20,50 +21,94 @@ class UploadController extends Controller
         ]);
     }
 
-    public function uploadMedia()
+    private function upload($user, $request)
     {
         do {
             $code = Str::random(10);
         } while (Upload::where('media_code', '=', $code)->exists());
 
-        Storage::disk('public')->put(Auth::user()->code . '/' . $code, file_get_contents(request('file')));
-        Upload::create([
+        Storage::disk('public')->put($user->code . '/' . $code, file_get_contents($request->file('file')));
+        $media = Upload::create([
             'media_code' => $code,
-            'media_name' => request('file')->getClientOriginalName(),
-            'user_code' => Auth::user()->code,
+            'media_name' => $request->file('file')->getClientOriginalName(),
+            'media_size' => Storage::disk('public')->size($user->code . '/' . $code),
+            'user_code' => $user->code,
             'visible' => true
         ]);
+
+        return '{
+            "status": 200,
+            "media_code": "' . $code . '", 
+            "url": "' . $media->url() . '"
+        }';
     }
 
-    public function toggleVisibility($mediaId)
+    public function uploadMedia()
     {
-        $upload = Upload::where('id', '=', $mediaId)->first();
+        $user = Auth::user();
+        return $this->upload($user, request());
+    }
+
+    public function uploadMediaToken($token)
+    {
+        $user = User::where('access_token', $token)->first();
+        if ($user === null) {
+            return response('{
+                "status": 403,
+                "error": "The provided token does not exist."
+            }', 403);
+        }
+
+        return $this->upload($user, request());
+    }
+
+    public function toggleVisibility($mediaCode)
+    {
+        $upload = Upload::where('media_code', $mediaCode)->first();
 
         if ($upload == null) {
             return abort(404);
         }
 
-        if (!Auth::user()->admin() && $upload->user_code != Auth::user()->code) {
+        if (!Auth::user()->admin && $upload->user_code != Auth::user()->code) {
             return abort(403);
         }
 
-        $upload->visible(!$upload->visible());
+        $upload->visible = !$upload->visible;
         return $upload->save();
     }
 
-    public function delete($mediaId)
+    public function delete($mediaCode)
     {
-        $upload = Upload::where('id', '=', $mediaId)->first();
+        $upload = Upload::where('media_code', $mediaCode)->first();
+        $user = Auth::user();
 
         if ($upload == null) {
             return abort(404);
         }
 
-        if (!Auth::user()->admin() && $upload->user_code != Auth::user()->code) {
+        if (!$user->admin && $upload->user_code != $user->code) {
             return abort(403);
         }
 
         Storage::disk('public')->delete($upload->path());
         return $upload->delete();
     }
+
+    // public function deleteToken($mediaCode, $token)
+    // {
+    //     $upload = Upload::where('media_code', $mediaCode)->first();
+    //     $user = User::where('access_token', $token)->firstOrFail();
+
+    //     if ($upload == null) {
+    //         return abort(404);
+    //     }
+
+    //     if (!$user->admin && $upload->user_code != $user->code) {
+    //         return abort(403);
+    //     }
+
+    //     Storage::disk('public')->delete($upload->path());
+    //     return $upload->delete();
+    // }
 }

@@ -26,9 +26,19 @@ class FilesController extends Controller
      */
     public function index()
     {
-        $files = Upload::query();
+        $order = strtolower(request('order', 'desc'));
+        if ($order !== 'asc' && $order !== 'desc') {
+            $order = 'desc';
+        }
 
-        if (!Auth::user()->admin()) {
+        $sort = strtolower(request('sort', 'created_at'));
+        if ($sort !== 'created_at' && $sort !== 'media_name' && $sort !== 'media_size') {
+            $sort = 'created_at';
+        }
+
+        $files = Upload::query()->orderBy($sort, $order);
+
+        if (!Auth::user()->admin) {
             $files->where('user_code', '=', Auth::user()->code);
         }
 
@@ -37,7 +47,9 @@ class FilesController extends Controller
         }
 
         return view('pages.files', [
-            'files' => $files->paginate(25)
+            'files' => $files->paginate(25),
+            'order' => $order,
+            'sort' => $sort,
         ]);
     }
 }

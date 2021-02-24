@@ -18,6 +18,7 @@ class CreateUploadsTable extends Migration
             $table->string('user_code', 5);
             $table->string('media_code', 10)->unique();
             $table->string('media_name');
+            $table->bigInteger('media_size');
             $table->boolean('visible');
             $table->timestamps();
 

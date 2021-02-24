@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Files;
 
 class Upload extends Model
 {
@@ -17,6 +18,7 @@ class Upload extends Model
     protected $fillable = [
         'media_code',
         'media_name',
+        'media_size',
         'user_code',
         'visible'
     ];
@@ -37,21 +39,41 @@ class Upload extends Model
         'visible' => 'boolean'
     ];
 
-    public function visible($visible = null)
-    {
-        if ($visible === null) {
-            return $this->getAttribute('visible');
-        }
-        return $this->setAttribute('visible', $visible);
-    }
-
     public function path()
     {
         return $this->user_code . '/' . $this->media_code;
     }
 
-    public static function of($userCode, $mediaCode)
+    public function owner()
     {
-        return Upload::where('user_code', $userCode)->where('media_code', $mediaCode)->firstOrFail();
+        return $this->belongsTo(User::class, 'user_code', 'code');
+    }
+
+    public function url()
+    {
+        return route('media.view', ['mediaCode' => $this->media_code]);
+    }
+
+    public static function of($mediaCode)
+    {
+        return Upload::where('media_code', $mediaCode)->firstOrFail();
+    }
+
+    public function icon()
+    {
+        $type = Files::simplifyMimeType(Files::mimeType($this));
+        switch ($type) {
+            case 'font':
+                return 'type';
+            case 'audio':
+                return 'music';
+            case 'text':
+            case 'pdf':
+                return 'file-text';
+            case 'zip':
+                return 'archive';
+            default:
+                return $type;
+        }
     }
 }

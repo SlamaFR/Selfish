@@ -14,6 +14,7 @@
             integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="{{ asset('js/jquery-3.5.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/clipboard.min.js') }}"></script>
     @yield('head.scripts')
 
     <!-- Fonts -->
@@ -27,7 +28,7 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     @yield('head.styles')
 </head>
-<body class="mx-auto" style="max-width: 1140px;" data-theme="{{ Cookie::get('theme', 'dark') }}">
+<body class="mx-auto" data-theme="{{ Cookie::get('theme', 'dark') }}">
 @yield('content')
 <script>
     feather.replace();
@@ -37,5 +38,12 @@
     });
 </script>
 @yield('script')
+<script>
+    const csrf_token = "{{ csrf_token() }}";
+    const baseUrl = "{{ Config::get("app.url") }}";
+</script>
+<script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+
+{{-- <p class="text-end me-5"><span style="font-family: Pacifico">Selfish</span> v1.0</p> --}}
 </body>
 </html>

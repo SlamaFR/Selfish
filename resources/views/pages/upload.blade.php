@@ -1,17 +1,20 @@
 @extends('layouts.app')
 
-@section('head')
-<link href="{{ asset('css/dropzone.css') }}" rel="stylesheet">
-<script src="{{ asset('js/dropzone.js') }}"></script>
-<style>
-.dropzone {
-    border-radius: .2rem;
-    border: 1px dashed; 
-}
+@section('head.scripts')
+<script src="{{ asset('js/dropzone.min.js') }}"></script>
+@endsection
 
-.dz-image {
-    border-radius: .2rem!important;
-}
+@section('head.styles')
+<link href="{{ asset('css/dropzone.css') }}" rel="stylesheet">
+<style>
+    .dropzone {
+        border-radius: .2rem;
+        border: 1px dashed; 
+    }
+
+    .dz-image {
+        border-radius: .2rem!important;
+    }
 </style>
 @endsection
 
@@ -20,7 +23,7 @@
 
 <div class="container my-3">
 
-    <div class="alert alert-info" role="alert">
+    <div class="alert alert-info alert-important" role="alert">
         <h5>Notice</h5>
         You can currently upload files up to {{ $max_upload_size }} each.
     </div>
