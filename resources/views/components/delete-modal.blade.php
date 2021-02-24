@@ -6,11 +6,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to do that?
+                Are you sure you want to delete this media?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No</button>
-                <button type="button" class="btn btn-danger btn-confirm">Yes</button>
+                <button type="button" class="btn btn-danger btn-confirm btn-icon"><i data-feather="trash-2"></i>Yes</button>
             </div>
         </div>
     </div>
