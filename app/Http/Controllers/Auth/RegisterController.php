@@ -69,12 +69,30 @@ class RegisterController extends Controller
             $code = Str::random(5);
         } while (User::where('code', '=', $code)->exists());
 
-        return User::create([
+        do {
+            $token = Str::random(32);
+        } while (User::where('access_token', '=', $token)->exists());
+
+        $user = User::create([
             'username' => $data['username'],
             'email' => $data['email'],
             'code' => $code,
             'password' => Hash::make($data['password']),
-            'admin' => false
+            'admin' => false,
+            'access_token' => $token
         ]);
+
+        $user->settings()->setMultiple([
+            'display.image' => 'default',
+            'display.video' => 'default',
+            'display.audio' => 'default',
+            'display.text' => 'default',
+            'display.pdf' => 'default',
+            'display.zip' => 'default',
+            'display.file' => 'default'
+        ]);
+        $user->save();
+        
+        return $user;
     }
 }
