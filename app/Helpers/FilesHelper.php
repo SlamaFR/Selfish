@@ -62,7 +62,7 @@ class Files
     }
 
     /*
-     * Possible types : image, video, audio, text, font, pdf, zip, file.
+     * Possible types : image, video, audio, text, pdf, zip, file.
      */
     public static function simplifyMimeType($mimeType)
     {
@@ -76,6 +76,7 @@ class Files
             case "application/x-rar-compressed":
             case "application/x-tar":
             case "application/x-zip":
+            case "application/zip":
             case "application/x-7r-compressed":
                 return "zip";
             case "application/json":
@@ -87,5 +88,10 @@ class Files
                 if ($explode[0] == "application") return "file";
                 return $explode[0];
         }
+    }
+
+    public static function exists($file)
+    {
+        return Storage::disk('public')->exists($file->path());
     }
 }
