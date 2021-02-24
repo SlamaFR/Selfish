@@ -7,10 +7,17 @@ use App\Models\User;
 @section('head.scripts')
 <script type="text/javascript" src="{{ asset('js/plyr.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/clipboard.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/highlight.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/highlight-lines.min.js') }}"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
 @endsection
 
 @section('head.styles')
 <link href="{{ asset('css/plyr.css') }}" rel="stylesheet">
+<link href="{{ asset('css/atom-one-dark.css') }}" rel="stylesheet">
 <style>
     .nav-link {
         cursor: pointer;
@@ -33,6 +40,26 @@ use App\Models\User;
     h1 .file-icon {
         height: 72px;
         width: 72px;
+    }
+
+    .hljs-ln-numbers {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        text-align: right;
+        color: #7d7d7d;
+        border-right: 1px solid #4b4b4b;
+        vertical-align: top;
+        padding-right: 5px!important;
+
+    }
+
+    .hljs-ln-code {
+        padding-left: 5px!important;
+	    white-space: pre-wrap;
     }
 </style>
 @endsection
@@ -65,7 +92,12 @@ use App\Models\User;
         <p class="fw-bold my-3">{{ $file->media_name }}</p>
     @elseif($media_type == 'pdf')
         <div class="container px-4">
-            <embed class="pdf-viewer" src="{{ $media_path }}" type="{{ $mime_type}}">
+            <embed class="pdf-viewer" src="{{ $media_path }}" type="{{ $mime_type }}">
+        </div>
+        <p class="fw-bold my-3">{{ $file->media_name }}</p>
+    @elseif($media_type == 'text')
+        <div class="container px-4 text-start">
+            <pre><code>{{ $media_raw }}</code></pre>
         </div>
         <p class="fw-bold my-3">{{ $file->media_name }}</p>
     @else
