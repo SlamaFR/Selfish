@@ -97,7 +97,8 @@ use App\Models\User;
         <p class="fw-bold my-3">{{ $file->media_name }}</p>
     @elseif($media_type == 'text')
         <div class="container px-4 text-start">
-            <pre><code>{{ $media_raw }}</code></pre>
+            @php($fileExplode = explode('.', $file->media_name))
+            <pre><code @if(end($fileExplode) === 'txt') class="plaintext" @endif>{{ $media_raw }}</code></pre>
         </div>
         <p class="fw-bold my-3">{{ $file->media_name }}</p>
     @else
