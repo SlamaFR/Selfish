@@ -21,7 +21,7 @@ class Administrator
             if ($request->isMethod('GET')) {
                 return redirect('home');
             }
-            return abort(403);
+            return abort(401);
         }
         return $next($request);
     }

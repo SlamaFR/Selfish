@@ -54,9 +54,9 @@ class UploadController extends Controller
         $user = User::where('access_token', $token)->first();
         if ($user === null) {
             return response('{
-                "status": 403,
+                "status": 401,
                 "error": "The provided token does not exist."
-            }', 403);
+            }', 401);
         }
 
         return $this->upload($user, request());
@@ -71,7 +71,7 @@ class UploadController extends Controller
         }
 
         if (!Auth::user()->admin && $upload->user_code != Auth::user()->code) {
-            return abort(403);
+            return abort(401);
         }
 
         $upload->visible = !$upload->visible;
@@ -88,7 +88,7 @@ class UploadController extends Controller
         }
 
         if (!$user->admin && $upload->user_code != $user->code) {
-            return abort(403);
+            return abort(401);
         }
 
         Storage::disk('public')->delete($upload->path());
@@ -105,7 +105,7 @@ class UploadController extends Controller
     //     }
 
     //     if (!$user->admin && $upload->user_code != $user->code) {
-    //         return abort(403);
+    //         return abort(401);
     //     }
 
     //     Storage::disk('public')->delete($upload->path());
