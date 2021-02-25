@@ -9,7 +9,7 @@
                 @foreach(Config::get('pages') as $route => $meta)
                     @if(!$meta['admin'] || ($meta['admin'] && Auth::user()->admin))
                     <li class="nav-item">
-                        <a class="nav-link @if(Route::currentRouteName() == $route) active @endif" href="{{ route($route) }}">
+                        <a class="nav-link @if(str_starts_with(Route::currentRouteName(), $route)) active @endif" href="{{ route($route) }}">
                             <i data-feather="{{ $meta['icon'] }}"></i>@lang('pages.' . $route)
                         </a>
                     </li>

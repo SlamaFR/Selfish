@@ -3,5 +3,5 @@
 return [
     'files' => 'Files',
     'upload' => 'Upload',
-    'admin.config' => 'Configuration'
+    'admin' => 'Configuration'
 ];
