@@ -17,9 +17,11 @@ class Administrator
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guest() || !Auth::user()->admin)
-        {
-            return redirect('files');
+        if (Auth::guest() || !Auth::user()->admin) {
+            if ($request->isMethod('GET')) {
+                return redirect('home');
+            }
+            return abort(403);
         }
         return $next($request);
     }
