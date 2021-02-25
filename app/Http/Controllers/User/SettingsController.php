@@ -20,12 +20,12 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        return view('pages.settings');
+        return view('user.edit', ['user' => Auth::user(), 'self' => true]);
     }
 
-    public function updateInfo()
+    public function updateInfo($userId = null)
     {
-        $user = Auth::user();
+        $user = ($userId != null) ? User::ofId($userId) : Auth::user();
 
         request()->validate([
             'username' => ['required', Rule::unique('users', 'username')->ignore($user->id), 'alpha'],
@@ -39,22 +39,24 @@ class SettingsController extends Controller
         return back();
     }
 
-    public function updatePassword()
+    public function updatePassword($userId = null)
     {
+        $user = ($userId != null) ? User::ofId($userId) : Auth::user();
+
         request()->validate([
-            'old_password' => ['required', new MatchOldPassword],
+            'old_password' => ($userId != null) ? [] : ['required', new MatchOldPassword],
             'new_password' => ['required', 'confirmed', 'min:8']
         ]);
 
-        $user = Auth::user();
         $user->password = Hash::make(request('new_password'));
         $user->save();
         flash('Successfully updated password.')->success();
         return back();
     }
 
-    public function updateDisplaySettings()
+    public function updateDisplaySettings($userId = null)
     {
+        $user = ($userId != null) ? User::ofId($userId) : Auth::user();
         $values = ['default', 'raw'];
 
         request()->validate([
@@ -68,22 +70,23 @@ class SettingsController extends Controller
 
         foreach (request()->all() as $key => $value) {
             $key = str_replace('_', '.', $key);
-            if (Auth::user()->settings()->has($key)) {
-                Auth::user()->settings()->set($key, $value);
+            if ($user->settings()->has($key)) {
+                $user->settings()->set($key, $value);
             }
         }
-        Auth::user()->save();
+        $user->save();
         flash('Successfully updated display settings.')->success();
         return back();
     }
 
-    public function regenerateToken()
+    public function regenerateToken($userId = null)
     {
+        $user = ($userId != null) ? User::ofId($userId) : Auth::user();
+
         do {
             $token = Str::random(32);
         } while (User::where('access_token', '=', $token)->exists());
 
-        $user = Auth::user();
         $user->access_token = $token;
         $user->save();
         return response($token, 200);
@@ -92,6 +95,7 @@ class SettingsController extends Controller
     public function ShareX()
     {
         $user = Auth::user();
+
         return response($user->sharexConfig(), 200, [
             'Content-Type' => 'text/plain',
             'Content-Disposition' => 'attachment; filename=' . $user->username . '.sxcu'
