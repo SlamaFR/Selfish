@@ -52,6 +52,11 @@ class User extends Authenticatable
         return User::where(['code' => $userCode])->firstOrFail();
     }
 
+    public static function ofId($userId)
+    {
+        return User::where(['id' => $userId])->firstOrFail();
+    }
+
     public function sharexConfig()
     {
         return '{
