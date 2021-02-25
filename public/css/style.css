@@ -9,7 +9,7 @@
 }
 
 .toast-body {
-    color: #212529!important;
+    color: #212529 !important;
 }
 
 .btn-icon .feather,
@@ -26,17 +26,24 @@
     height: 16px;
 }
 
-.feather, svg, svg * { 
-    pointer-events: none; 
+.feather,
+svg,
+svg * {
+    pointer-events: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: "Circular Medium", -apple-system, "Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Circular Medium", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 body {
     --plyr-color-main: #343a40;
-    font-family: "Circular", -apple-system, "Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-family: "Circular", -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 body .container {
@@ -47,7 +54,8 @@ html {
     margin-left: calc(100vw - 100%);
 }
 
-th, td {
+th,
+td {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -70,5 +78,20 @@ table td {
 }
 
 .bg-dark {
-    background-color: #161819!important;
+    background-color: #161819 !important;
+}
+
+@keyframes slide {
+    0% {
+        visibility: hidden;
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+.slide {
+    animation: slide .5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
