@@ -225,6 +225,8 @@ return [
         'Storage' => Illuminate\Support\Facades\Storage::class,
         'Str' => Illuminate\Support\Str::class,
         'URL' => Illuminate\Support\Facades\URL::class,
+        'Upload' => App\Models\Upload::class,
+        'User' => App\Models\User::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Files' => App\Helpers\Files::class,
