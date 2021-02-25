@@ -89,7 +89,10 @@ class SettingsController extends Controller
 
         $user->access_token = $token;
         $user->save();
-        return response($token, 200);
+        return response()->json([
+            "message" => ($userId == null) ? "Your personnal access token has been regenerated and copied to clipboard." : "<strong>" . $user->username . "</strong>'s personnal access token has been regenerated and copied to clipboard.",
+            "token" => $token
+        ], 200);
     }
 
     public function ShareX()

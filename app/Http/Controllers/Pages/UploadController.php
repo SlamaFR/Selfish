@@ -66,16 +66,27 @@ class UploadController extends Controller
     {
         $upload = Upload::where('media_code', $mediaCode)->first();
 
-        if ($upload == null) {
-            return abort(404);
+        if ($upload === null) {
+            return response()->json([
+                "message" => "This media no longer exists."
+            ], 404);
         }
 
         if (!Auth::user()->admin && $upload->user_code != Auth::user()->code) {
-            return abort(401);
+            return response()->json([
+                "message" => "You are not authorized to do this."
+            ], 401);
         }
 
         $upload->visible = !$upload->visible;
-        return $upload->save();
+        $upload->save();
+        return response()->json([
+            "visible" => (int) $upload->visible,
+            "btnIcon" => $upload->visible ? "eye-off" : "eye",
+            "stateIcon" => $upload->visible ? "check-circle" : "x-circle",
+            "stateColor" => $upload->visible ? "text-success" : "text-danger",
+            "message" => "Media <strong>" . $upload->media_name . "</strong> is now " . ($upload->visible ? "visible" : "invisible") . "."
+        ], 200);
     }
 
     public function delete($mediaCode)
@@ -84,15 +95,20 @@ class UploadController extends Controller
         $user = Auth::user();
 
         if ($upload == null) {
-            return abort(404);
+            return response()->json([
+                "message" => "This media no longer exists."
+            ], 404);
         }
 
         if (!$user->admin && $upload->user_code != $user->code) {
-            return abort(401);
+            return response()->json([
+                "message" => "You are not authorized to do this."
+            ], 401);
         }
 
         Storage::disk('public')->delete($upload->path());
-        return $upload->delete();
+        $upload->delete();
+        return response(null, 200);
     }
 
     // public function deleteToken($mediaCode, $token)

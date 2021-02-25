@@ -19,9 +19,11 @@ class Administrator
     {
         if (Auth::guest() || !Auth::user()->admin) {
             if ($request->isMethod('GET')) {
-                return redirect('home');
+                return redirect('/');
             }
-            return abort(401);
+            return response()->json([
+                "message" => "You are not authorized to do this."
+            ], 401);
         }
         return $next($request);
     }
