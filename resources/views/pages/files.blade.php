@@ -75,7 +75,9 @@ use App\Models\User;
                             
                         </a>
                     </div>
-                    {{-- <button class="btn btn-outline-danger px-2 ms-2"><i data-feather="trash"></i></button> --}}
+                    <button class="btn btn-outline-danger px-2 ms-2" id="delete-btn" disabled data-action="delete-media-selection">
+                        <i data-feather="trash-2"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -97,10 +99,10 @@ use App\Models\User;
                     <tbody id="files-table">
                         @foreach($files as $file)
                             @if(Files::exists($file))
-                                <tr style="height: 92px;">
+                                <tr style="height: 92px;" class="media-row">
                                     <td class="text-center" style="max-width: 92px;">
-                                        @if(Files::isDisplayableImage(Files::mimeType($file)))
-                                            <img style="max-width: 75px" src="{{ $file->url() }}/raw" alt="">
+                                        @if(Files::isDisplayableImage($file->media_type))
+                                            <img style="max-width: 75px; max-height: 75px" src="{{ $file->url() }}/raw" alt="">
                                         @else
                                             <p class="m-0"><i class="file-icon" data-feather="{{ $file->icon() }}"></i></p>
                                         @endif
@@ -117,7 +119,7 @@ use App\Models\User;
                                     </td>
                                     <td>{{ $file->created_at }}</td>
                                     <td scope="col">
-                                        <div class="col d-flex text-center btn-group" data-id="{{ $file->media_code }}" data-name="{{ $file->media_name }}" data-visible="{{ $file->visible ? 1 : 0 }}">
+                                        <div class="col d-flex text-center btn-group" data-id="{{ $file->media_code }}" data-name="{{ $file->media_name }}" data-visible="{{ (int) $file->visible }}">
                                             <a class="btn btn-sm px-1 btn-outline-secondary copy" title="Copy link" data-clipboard-text="{{ route('media.view', ['mediaCode' => $file->media_code]) }}">
                                                 <i data-feather="link"></i>
                                             </a>
@@ -130,7 +132,7 @@ use App\Models\User;
                                             <a class="btn btn-sm px-1 btn-outline-warning" data-action="toggle-visibility" title="{{ $file->visible ? "Hide" : "Show"}}">
                                                 <i data-feather="{{ $file->visible ? "eye-off" : "eye"}}"></i>
                                             </a>
-                                            <a class="btn btn-sm px-1 btn-outline-danger" data-action="delete" title="Delete">
+                                            <a class="btn btn-sm px-1 btn-outline-danger" data-action="delete-media" title="Delete">
                                                 <i data-feather="trash-2"></i>
                                             </a>
                                         </div>

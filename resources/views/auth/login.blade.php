@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('head.scripts')
+<script src="https://www.google.com/recaptcha/api.js"></script>
+@endsection
+
 @section('head.styles')
 <style>
     html,
@@ -54,7 +58,7 @@
 
 @section('content')
 <main class="form-signin text-center">
-    <form method="POST">
+    <form method="POST" id="login-form">
         @csrf
 
         <h1 class="mb-5 fw-normal" style="font-family: Pacifico, sans-serif;">{{ Config::get('app.name') }}</h1>
@@ -66,6 +70,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @enderror
+
+        @if(Setting::get('app.maintenance'))
+        <div class="alert alert-warning alert-important fade show" role="alert">
+            This Selfish server is currently unavailable.
+        </div>
+        @endif
+
+        @include('flash::message')
 
         <label for="inputusername" class="visually-hidden">Username</label>
         <input name="username" type="text" id="inputusername" class="form-control" placeholder="Username" value="{{ old('username') }}" required @if(!old('username')) autofocus @endif>
@@ -84,13 +96,28 @@
                 </div>
                 <div class="col text-end">
                     <a href="{{ route('password.request') }}">Forgot you password?</a>
+                    @if(Setting::get('app.registrations') == '1')
                     <br>
                     <a href="{{ route('register') }}">Not registered yet?</a>
+                    @endif
                 </div>
             </div>
         </div>
-        
-        <button class="mt-4 btn btn-lg btn-primary w-100" type="submit">Log in</button>
+        @if(Setting::get('app.captcha') == '1')
+        <button class="mt-4 btn btn-lg btn-primary w-100 g-recaptcha" data-sitekey="{{ Setting::get('key.captcha.site') }}" data-callback='onSubmit' data-action='submit'>Log in</button>
+        @else
+        <button class="mt-4 btn btn-lg btn-primary w-100" type='submit'>Log in</button>
+        @endif
     </form>
 </main>
 @endsection
+
+@if(Setting::get('app.captcha') == '1')
+@section('script')
+<script>
+    function onSubmit(token) {
+        document.getElementById("login-form").submit();
+    }
+</script>
+@endsection
+@endif

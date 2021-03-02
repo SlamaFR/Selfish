@@ -21,9 +21,11 @@
         padding: 15px;
         margin: auto;
     }
+
     .form-signin .checkbox {
         font-weight: 400;
     }
+
     .form-signin .form-control {
         position: relative;
         box-sizing: border-box;
@@ -31,11 +33,11 @@
         padding: 10px;
         font-size: 16px;
     }
+
     .form-signin .form-control:focus {
         z-index: 2;
     }
 
-    
     .form-signin input[name="email"] {
         margin-top: 10px;
     }
@@ -45,6 +47,7 @@
         border-bottom-right-radius: 0;
         border-bottom-left-radius: 0;
     }
+    
     .form-signin input[name="password_confirmation"] {
         margin-top: -1px;
         border-top-left-radius: 0;

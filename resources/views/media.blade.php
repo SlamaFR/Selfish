@@ -68,7 +68,7 @@ use App\Models\User;
 @include('components.navbar-media')
 
 @include('components.toast')
-@include('components.delete-modal')
+@include('components.delete-modal', ['message' => 'Are you sure you want to delete this media?'])
 
 <div class="my-4 text-center h-100 mx-auto">
     @if($media_type == 'image')

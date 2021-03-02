@@ -9,7 +9,7 @@
         <ul class="navbar-nav d-flex">
             <li class="nav-item">
                 <a class="nav-link" data-action="toggle-dark-mode">
-                    <i data-feather="{{ Cookie::get('theme', 'dark') == "dark" ? "sun" : "moon" }}"></i>
+                    <i data-feather="{{ Cookie::get('theme', Setting::get('app.default_theme')) == "dark" ? "sun" : "moon" }}"></i>
                 </a>
             </li>
             <li class="nav-item">
@@ -34,7 +34,7 @@
                     </a>
                 </li>
                 <li class="nav-item" data-id="{{ $file->media_code }}" >
-                    <a data-action="delete-confirm" class="nav-link">
+                    <a data-action="delete-media-confirm" class="nav-link">
                         <i data-feather="trash-2"></i>
                     </a>
                 </li>

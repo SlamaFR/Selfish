@@ -27,22 +27,24 @@
     <link href="{{ asset('css/darktheme.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     @yield('head.styles')
+    @if(Setting::get('app.maintenance'))
+    <style>
+        .navbar {
+            border-bottom: 2px solid #dc3545;
+        }
+    </style>
+    @endif
 </head>
-<body class="mx-auto" data-theme="{{ Cookie::get('theme', 'dark') }}">
+<body class="mx-auto" data-theme="{{ Cookie::get('theme', Setting::get('app.default_theme')) }}">
 @yield('content')
-<script>
-    feather.replace();
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-</script>
+
 @yield('script')
 <script>
     const csrf_token = "{{ csrf_token() }}";
     const baseUrl = "{{ Config::get("app.url") }}";
 </script>
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
+@yield('script2')
 
 {{-- <p class="text-end me-5"><span style="font-family: Pacifico">Selfish</span> v1.0</p> --}}
 </body>
