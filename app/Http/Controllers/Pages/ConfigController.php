@@ -66,7 +66,7 @@ class ConfigController extends Controller
         request()->validate([
             "app_captcha" => ['numeric', Rule::in(['0', '1'])],
             "app_default-theme" => Rule::in(['dark', 'light']),
-            "app_locale" => Rule::in(array_keys(Config::get('selfish.locales'))),
+            "app_locale" => Rule::in(array_keys(Config::get('app.locales'))),
             "app_registrations" => ['numeric', Rule::in(['0', '1'])],
             "disk_max-quota" => ['numeric'],
             "disk_max-quota_unit" => ['numeric', Rule::in(['0', '10', '20', '30'])],
