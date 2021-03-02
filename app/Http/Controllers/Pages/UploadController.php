@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Upload;
 use App\Models\User;
+use App\Models\Setting;
 use App\Helpers\Files;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -27,14 +28,43 @@ class UploadController extends Controller
             $code = Str::random(10);
         } while (Upload::where('media_code', '=', $code)->exists());
 
-        Storage::disk('public')->put($user->code . '/' . $code, file_get_contents($request->file('file')));
+        $file = $request->file('file');
+        $fileSize = $file->getSize();
+        $userMaxQuota = $user->getEffectiveMaxDiskQuota();
+        $userQuota = $user->disk_quota;
+
+        if ($userMaxQuota > 0) {
+            if ($fileSize > $userMaxQuota) {
+                return response()->json([
+                    "error" => "File is too large."
+                ], 403);
+            }
+            if ($fileSize + $userQuota > $userMaxQuota) {
+                if ($user->settings()->get('disk.auto_delete', '0') == '1') {
+                    do {
+                        $media = $user->uploads->shift();
+                        $this->delete($media->media_code);
+                    } while ($fileSize + $user->refresh()->disk_quota > $userMaxQuota);
+                } else {
+                    return response()->json([
+                        "error" => "Disk quota exceeded."
+                    ], 403);
+                }
+            }
+        }
+
+        Storage::disk('public')->put($user->code . '/' . $code, file_get_contents($file));
         $media = Upload::create([
             'media_code' => $code,
-            'media_name' => $request->file('file')->getClientOriginalName(),
+            'media_name' => $file->getClientOriginalName(),
             'media_size' => Storage::disk('public')->size($user->code . '/' . $code),
+            'media_type' => $file->getClientMimeType(),
             'user_code' => $user->code,
             'visible' => true
         ]);
+
+        $user->disk_quota = $user->disk_quota + $media->media_size;
+        $user->save();
 
         return '{
             "status": 200,
@@ -54,7 +84,6 @@ class UploadController extends Controller
         $user = User::where('access_token', $token)->first();
         if ($user === null) {
             return response('{
-                "status": 401,
                 "error": "The provided token does not exist."
             }', 401);
         }
@@ -75,7 +104,7 @@ class UploadController extends Controller
         if (!Auth::user()->admin && $upload->user_code != Auth::user()->code) {
             return response()->json([
                 "message" => "You are not authorized to do this."
-            ], 401);
+            ], 403);
         }
 
         $upload->visible = !$upload->visible;
@@ -92,7 +121,6 @@ class UploadController extends Controller
     public function delete($mediaCode)
     {
         $upload = Upload::where('media_code', $mediaCode)->first();
-        $user = Auth::user();
 
         if ($upload == null) {
             return response()->json([
@@ -100,31 +128,24 @@ class UploadController extends Controller
             ], 404);
         }
 
+        $user = $upload->owner;
+        $maxQuota = $user->getEffectiveMaxDiskQuota();
+
         if (!$user->admin && $upload->user_code != $user->code) {
             return response()->json([
                 "message" => "You are not authorized to do this."
-            ], 401);
+            ], 403);
         }
 
         Storage::disk('public')->delete($upload->path());
+        $user->disk_quota = $user->disk_quota - $upload->media_size;
+        $user->save();
         $upload->delete();
-        return response(null, 200);
+        return response()->json([
+            'new_quota' => Files::humanFileSize($user->disk_quota),
+            'max_quota' => Files::humanFileSize($maxQuota),
+            'new_usage' => $maxQuota > 0 ? $user->disk_quota / $maxQuota : 0,
+            'unlimited_quota' => $maxQuota == 0,
+        ]);
     }
-
-    // public function deleteToken($mediaCode, $token)
-    // {
-    //     $upload = Upload::where('media_code', $mediaCode)->first();
-    //     $user = User::where('access_token', $token)->firstOrFail();
-
-    //     if ($upload == null) {
-    //         return abort(404);
-    //     }
-
-    //     if (!$user->admin && $upload->user_code != $user->code) {
-    //         return abort(401);
-    //     }
-
-    //     Storage::disk('public')->delete($upload->path());
-    //     return $upload->delete();
-    // }
 }

@@ -44,8 +44,11 @@ class MediaController extends Controller
             if (!Auth::user()->admin && Auth::user()->code !== $file->user_code) return abort(404);
         }
 
-        $mimeType = Files::mimeType($file);
-        $type = Files::simplifyMimeType($mimeType);
+        if (!Files::exists($file)) {
+            return abort(404);
+        }
+
+        $type = Files::simplifyMimeType($file->media_type);
 
         if($file->owner->settings()->get("display." . $type) === 'raw') {
             return $this->raw($mediaCode);
@@ -55,7 +58,7 @@ class MediaController extends Controller
             'user_code' => $file->user_code,
             'media_code' => $mediaCode,
             'media_type' => $type,
-            'mime_type' => $mimeType,
+            'mime_type' => $file->media_type,
             'media_path' => route('media.raw', [
                 'mediaCode' => $mediaCode
             ]),
