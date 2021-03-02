@@ -11,9 +11,12 @@
         "php": "^7.3|^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
+        "glorand/laravel-model-settings": "^4.2",
         "guzzlehttp/guzzle": "^7.0.1",
+        "laracasts/flash": "^3.2",
         "laravel/framework": "^8.12",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "laravel/ui": "^3.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
