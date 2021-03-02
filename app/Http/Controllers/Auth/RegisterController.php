@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\Setting;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -33,6 +35,20 @@ class RegisterController extends Controller
     protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm()
+    {
+        if (Setting::get('app.registrations') == '1') {
+            return view('auth.register');
+        }
+        flash("Registrations are disabled on this Selfish server.")->error();
+        return redirect($this->redirectTo);
+    }
+
+    /**
      * Create a new controller instance.
      *
      * @return void
@@ -42,19 +58,34 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function register(Request $request)
+    {
+        if (Setting::get('app.registrations') == '1') {
+            dd(true);
+            return $this->register($request);
+        }
+        flash("Registrations are disabled on this Selfish server.")->error();
+        return redirect($this->redirectTo);
+    }
+
+    public static function registrationValidator(array $data)
+    {
+        return Validator::make($data, [
+            'username' => ['required', 'alpha', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'max:255', 'confirmed'],
+        ]);
+    }
+
     /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    public function validator(array $data)
     {
-        return Validator::make($data, [
-            'username' => ['required', 'alpha', 'max:255', 'unique:users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        return $this::registrationValidator($data);
     }
 
     /**
@@ -63,7 +94,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    public function create(array $data)
     {
         do {
             $code = Str::random(5);
@@ -79,7 +110,9 @@ class RegisterController extends Controller
             'code' => $code,
             'password' => Hash::make($data['password']),
             'admin' => false,
-            'access_token' => $token
+            'access_token' => $token,
+            'disk_quota' => 0,
+            'max_disk_quota' => 0
         ]);
 
         $user->settings()->setMultiple([
@@ -89,10 +122,12 @@ class RegisterController extends Controller
             'display.text' => 'default',
             'display.pdf' => 'default',
             'display.zip' => 'default',
-            'display.file' => 'default'
+            'display.file' => 'default',
+            'disk.max_quota' => 'default',
+            'disk.auto_delete' => '0',
         ]);
         $user->save();
-        
+
         return $user;
     }
 }
