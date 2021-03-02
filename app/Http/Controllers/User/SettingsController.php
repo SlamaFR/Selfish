@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Pages\ConfigController;
 use App\Models\User;
 use App\Rules\MatchOldPassword;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Helpers\Files;
 
 class SettingsController extends Controller
 {
@@ -20,28 +22,60 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        return view('user.edit', ['user' => Auth::user(), 'self' => true]);
+        $user = Auth::user();
+        $maxDiskQuota = $user->getEffectiveMaxDiskQuota();
+        return view('user.edit', [
+            'user' => $user, 
+            'self' => true,
+            'maxDiskQuota' => $maxDiskQuota,
+            'maxDiskQuotaShift' => Files::bytesToUnit(intval($maxDiskQuota))
+        ]);
     }
 
     public function updateInfo($userId = null)
     {
         $user = ($userId != null) ? User::ofId($userId) : Auth::user();
 
+        if ($user->super() && Auth::user()->id != $userId) {
+            flash('You cannot edit superuser.')->error();
+            return back();
+        }
+
         request()->validate([
             'username' => ['required', Rule::unique('users', 'username')->ignore($user->id), 'alpha'],
-            'email' => ['required', Rule::unique('users', 'email')->ignore($user->id)]
+            'email' => ['required', Rule::unique('users', 'email')->ignore($user->id)],
+            'disk_max-quota' => ['required', Rule::in(['default', 'custom'])],
+            'disk_custom-max-quota' => ['numeric'],
+            'disk_custom-max-quota_unit' => ['numeric', Rule::in(['0', '10', '20', '30'])],
+            'disk_auto-delete' => ['boolean'],
         ]);
 
         $user->username = request('username');
         $user->email = request('email');
+
+        if (Auth::user()->admin) {
+            $user->settings()->set('disk.max_quota', request('disk_max-quota'));
+            if (request('disk_max-quota') == 'custom') {
+                $user->max_disk_quota = strval(intval(request('disk_custom-max-quota')) << intval(request('disk_custom-max-quota_unit')));
+            } else {
+                $user->max_disk_quota = "0";
+            }
+        }
+        $user->settings()->set('disk.auto_delete', request('disk_auto-delete'));
+
         $user->save();
-        flash('Successfully updated username and email address.')->success();
+        flash('Successfully updated user settings.')->success();
         return back();
     }
 
     public function updatePassword($userId = null)
     {
         $user = ($userId != null) ? User::ofId($userId) : Auth::user();
+
+        if ($user->super() && Auth::user()->id != $userId) {
+            flash('You cannot edit superuser.')->error();
+            return back();
+        }
 
         request()->validate([
             'old_password' => ($userId != null) ? [] : ['required', new MatchOldPassword],
@@ -58,6 +92,11 @@ class SettingsController extends Controller
     {
         $user = ($userId != null) ? User::ofId($userId) : Auth::user();
         $values = ['default', 'raw'];
+
+        if ($user->super() && Auth::user()->id != $userId) {
+            flash('You cannot edit superuser.')->error();
+            return back();
+        }
 
         request()->validate([
             "display_image" => [Rule::in($values)],
@@ -82,6 +121,12 @@ class SettingsController extends Controller
     public function regenerateToken($userId = null)
     {
         $user = ($userId != null) ? User::ofId($userId) : Auth::user();
+
+        if ($user->super() && Auth::user()->id != $userId) {
+            return response()->json([
+                "message" => "You cannot edit superuser."
+            ], 403);
+        }
 
         do {
             $token = Str::random(32);

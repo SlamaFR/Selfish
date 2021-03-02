@@ -81,6 +81,10 @@ table td {
     background-color: #161819 !important;
 }
 
+[data-theme=dark] .progress {
+    background-color: #404040;
+}
+
 @keyframes slide {
     0% {
         visibility: hidden;

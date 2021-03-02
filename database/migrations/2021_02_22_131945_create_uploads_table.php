@@ -15,14 +15,15 @@ class CreateUploadsTable extends Migration
     {
         Schema::create('uploads', function (Blueprint $table) {
             $table->id();
-            $table->string('user_code', 5);
+            $table->string('user_code', 5)->nullable();
             $table->string('media_code', 10)->unique();
             $table->string('media_name');
             $table->bigInteger('media_size');
+            $table->string('media_type');
             $table->boolean('visible');
             $table->timestamps();
 
-            $table->foreign('user_code')->references('code')->on('users');
+            $table->foreign('user_code')->references('code')->on('users')->onDelete("set null");
         });
     }
 

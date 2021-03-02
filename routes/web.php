@@ -24,7 +24,7 @@ Auth::routes();
 
 Route::post('/mode/{mode}', function ($mode) {
     if ($mode == 'light' || $mode == 'dark') {
-        Cookie::queue('theme', $mode, 525600);
+        Cookie::queue('theme', $mode, 5256000);
     }
 })->name('mode');
 
@@ -41,7 +41,24 @@ Route::group([
     Route::group([
         'middleware' => 'admin'
     ], function () {
-        Route::get('/config', 'Pages\ConfigController@index')->name('admin.config');
+        Route::get('/admin', 'Pages\ConfigController@index')->name('admin');
+        Route::get('/admin/user/{userId}/edit', 'Pages\ConfigController@editUser')->name('admin.user.edit');
+
+        Route::post('/admin/update-config', 'Pages\ConfigController@updateConfig')->name('admin.config.update');
+
+        Route::post('/admin/user/{userId}/delete', 'Pages\ConfigController@deleteUser')->name('admin.user.delete');
+        Route::post('/admin/user/create', 'Pages\ConfigController@createUser')->name('admin.user.create');
+        Route::post('/admin/user/{userId}/promote', 'Pages\ConfigController@promoteUser')->name('admin.user.promote');
+        Route::post('/admin/user/{userId}/demote', 'Pages\ConfigController@demoteUser')->name('admin.user.demote');
+
+        Route::post('/admin/user/{userId}/change-password', 'User\SettingsController@updatePassword')->name('admin.user.settings.password');
+        Route::post('/admin/user/{userId}/change-info', 'User\SettingsController@updateInfo')->name('admin.user.settings.info');
+        Route::post('/admin/user/{userId}/change-display', 'User\SettingsController@updateDisplaySettings')->name('admin.user.settings.display');
+        Route::post('/admin/user/{userId}/regenerate-token', 'User\SettingsController@regenerateToken')->name('admin.user.token.regenerate');
+
+        Route::post('/admin/recalculate-quotas', 'Pages\ConfigController@recalculateQuotas')->name('admin.quotas.recalculate');
+        Route::post('/admin/clean-up', 'Pages\ConfigController@cleanUp')->name('admin.clean-up');
+        Route::post('/admin/toggle-maintenance', 'Pages\ConfigController@toggleMaintenance')->name('admin.maintenance.toggle');
     });
 
     Route::get('/user/settings', 'User\SettingsController@index')->name('user.settings');

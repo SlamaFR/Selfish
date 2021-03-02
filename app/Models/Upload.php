@@ -19,6 +19,7 @@ class Upload extends Model
         'media_code',
         'media_name',
         'media_size',
+        'media_type',
         'user_code',
         'visible'
     ];
@@ -61,7 +62,7 @@ class Upload extends Model
 
     public function icon()
     {
-        $type = Files::simplifyMimeType(Files::mimeType($this));
+        $type = Files::simplifyMimeType($this->media_type);
         switch ($type) {
             case 'font':
                 return 'type';

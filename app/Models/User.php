@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Support\Facades\Config;
+use App\Helpers\Files;
 
 class User extends Authenticatable
 {
@@ -24,7 +25,9 @@ class User extends Authenticatable
         'code',
         'password',
         'admin',
-        'access_token'
+        'access_token',
+        'disk_quota',
+        'max_disk_quota'
     ];
 
     /**
@@ -44,7 +47,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'admin' => 'boolean'
+        'admin' => 'boolean',
+        'disk_quota' => 'int',
+        'max_disk_quota' => 'int'
     ];
 
     public static function of($userCode)
@@ -55,6 +60,16 @@ class User extends Authenticatable
     public static function ofId($userId)
     {
         return User::where(['id' => $userId])->firstOrFail();
+    }
+
+    public function uploads()
+    {
+        return $this->hasMany(Upload::class, 'user_code', 'code');
+    }
+
+    public function super()
+    {
+        return $this->id == 1;
     }
 
     public function sharexConfig()
@@ -69,5 +84,14 @@ class User extends Authenticatable
             "ThumbnailURL": "$json:url$/raw",
             "ErrorMessage": "$json:error$"
           }';
+    }
+
+    public function getEffectiveMaxDiskQuota()
+    {
+        if ($this->settings()->get('disk.max_quota') == 'default') {
+            return intval(Setting::get('disk.max_disk_quota'));
+        } else {
+            return $this->max_disk_quota;
+        }
     }
 }

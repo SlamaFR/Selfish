@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Storage;
 
 class Files
 {
-    public static function humanFileSize($size, $unit = "")
+    public static function humanFileSize($size, $unit = "", $digits = 2)
     {
-        if ((!$unit && $size >= 1 << 30) || $unit == "GB")
-            return number_format($size / (1 << 30), 2, '.', ' ') . " GB";
-        if ((!$unit && $size >= 1 << 20) || $unit == "MB")
-            return number_format($size / (1 << 20), 2, '.', ' ') . " MB";
-        if ((!$unit && $size >= 1 << 10) || $unit == "KB")
-            return number_format($size / (1 << 10), 2, '.', ' ') . " KB";
+        if ((!$unit && $size >= 1 << 30) || $unit == "GiB")
+            return number_format($size / (1 << 30), $digits, '.', ' ') . " GiB";
+        if ((!$unit && $size >= 1 << 20) || $unit == "MiB")
+            return number_format($size / (1 << 20), $digits, '.', ' ') . " MiB";
+        if ((!$unit && $size >= 1 << 10) || $unit == "KiB")
+            return number_format($size / (1 << 10), $digits, '.', ' ') . " KiB";
         return number_format($size, 0, '.', ' ') . " bytes";
     }
 
@@ -93,5 +93,22 @@ class Files
     public static function exists($file)
     {
         return Storage::disk('public')->exists($file->path());
+    }
+    
+    /**
+     * Determines the greatest unit of the given amount of bytes by shifting right 10 by 10.
+     * (bytes >> 10 = kiloBytes, bytes >> 20 = megaBytes, ...)
+     * 
+     * Example:
+     * 214748364800 (bytes) >> 30 = 200 (GB)
+     */
+    public static function bytesToUnit(int $bytes)
+    {
+        $temp = $bytes;
+        $shift = 0;
+        while ($temp > 0) {
+            $temp = $bytes >> ($shift = $shift + 10);
+        }
+        return max(0, $shift - 10);
     }
 }
