@@ -97,12 +97,14 @@ class UploadController extends Controller
 
         if ($upload === null) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.not-found')
             ], 404);
         }
 
         if (!Auth::user()->admin && $upload->user_code != Auth::user()->code) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.permission')
             ], 403);
         }
@@ -124,6 +126,7 @@ class UploadController extends Controller
 
         if ($upload == null) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.not-found')
             ], 404);
         }
@@ -133,6 +136,7 @@ class UploadController extends Controller
 
         if (!$user->admin && $upload->user_code != $user->code) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.permission')
             ], 403);
         }

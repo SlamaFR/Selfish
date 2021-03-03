@@ -25,6 +25,10 @@ Auth::routes();
 Route::post('/mode/{mode}', function ($mode) {
     if ($mode == 'light' || $mode == 'dark') {
         Cookie::queue('theme', $mode, 5256000);
+        return response()->json([
+            "next_mode_icon" => $mode === 'dark' ? 'sun' : 'moon',
+            "next_mode_name" => __('navbar.theme.' . $mode),
+        ]);
     }
 })->name('mode');
 

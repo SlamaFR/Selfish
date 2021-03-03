@@ -124,6 +124,7 @@ class SettingsController extends Controller
 
         if ($userId == 1 && Auth::user()->id != $userId) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.edit.super')
             ], 403);
         }
@@ -135,6 +136,7 @@ class SettingsController extends Controller
         $user->access_token = $token;
         $user->save();
         return response()->json([
+            "title" => __('general.info'),
             "message" => ($userId == null) ? __('toast.message.token.self') : __('toast.message.token', ['name' => $user->username]),
             "token" => $token
         ], 200);

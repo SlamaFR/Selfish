@@ -60,22 +60,24 @@ function go(url) {
     location.href = url;
 }
 
-function toggleDarkMode() {
+async function toggleDarkMode() {
     let currentMode = $("body").attr('data-theme');
     let nextMode = currentMode === 'light' ? 'dark' : 'light';
+    let res;
 
-    $("body").attr('data-theme', nextMode);
-    $('.btn-outline-' + nextMode)
-        .removeClass('btn-outline-' + nextMode)
-        .addClass('btn-outline-' + currentMode);
-    $('.btn-' + nextMode)
-        .removeClass('btn-' + nextMode)
-        .addClass('btn-' + currentMode);
-
-    $.post(route("mode.toggle", [nextMode]), {
+    await $.post(route("mode.toggle", [nextMode]), {
         "_token": csrf_token
+    }).done(function (response) {
+        res = response;
+        $("body").attr('data-theme', nextMode);
+        $('.btn-outline-' + nextMode)
+            .removeClass('btn-outline-' + nextMode)
+            .addClass('btn-outline-' + currentMode);
+        $('.btn-' + nextMode)
+            .removeClass('btn-' + nextMode)
+            .addClass('btn-' + currentMode);
     });
-    return nextMode;
+    return res;
 }
 
 $('.hover-to-see').hover(function () {
@@ -126,9 +128,9 @@ $('[data-action="regenerate-token"]').click(function () {
     }).done(function (response) {
         $('#personnal-token').val(response.token);
         navigator.clipboard.writeText(response.token);
-        dispatchToast("Information", response.message);
+        dispatchToast(response.title, response.message);
     }).fail(function (response) {
-        dispatchToast("Error", response.responseJSON.message);
+        dispatchToast(response.responseJSON.title, response.responseJSON.message);
     });
 });
 
@@ -144,9 +146,9 @@ $('[data-action="toggle-visibility"]').click(function () {
         $('[data-state="' + id + '"]').html(feather.icons[response.stateIcon].toSvg({
             class: response.stateColor
         }));
-        dispatchToast("Information", response.message);
+        dispatchToast(response.title, response.message);
     }).fail(function (response) {
-        dispatchToast("Error", response.responseJSON.message);
+        dispatchToast(response.responseJSON.title, response.responseJSON.message);
     });
 });
 
@@ -170,7 +172,7 @@ function removeMedia(id, elem) {
         mediaSelection = Math.max(mediaSelection - 1, 0);
         $('#delete-btn').attr('disabled', mediaSelection == 0);
     }).fail(function (response) {
-        dispatchToast("Error", response.responseJSON.message);
+        dispatchToast(response.responseJSON.title, response.responseJSON.message);
     });
 }
 
@@ -221,14 +223,14 @@ $('[data-action="set-display-default"]').click(function () {
     $('[id$=".default"]').prop('checked', true);
 });
 
-$('[data-action="toggle-dark-mode-text"]').click(function (e) {
-    let newMode = toggleDarkMode();
-    $(this).html(feather.icons[newMode === 'dark' ? 'sun' : 'moon'].toSvg() + (newMode === 'dark' ? 'Light mode' : 'Dark mode'));
+$('[data-action="toggle-dark-mode-text"]').click(async function () {
+    let newMode = await toggleDarkMode();
+    $(this).html(feather.icons[newMode.next_mode_icon].toSvg() + newMode.next_mode_name);
 });
 
 $('[data-action="toggle-dark-mode"]').click(function () {
     let newMode = toggleDarkMode();
-    $(this).html(feather.icons[newMode === 'dark' ? 'sun' : 'moon'].toSvg());
+    $(this).html(feather.icons[newMode.next_mode_icon].toSvg());
 });
 
 $('[data-action="toggle-admin"]').click(function () {
@@ -244,9 +246,9 @@ $('[data-action="toggle-admin"]').click(function () {
             .removeClass(admin ? 'text-success' : 'text-danger')
             .addClass(admin ? 'text-danger' : 'text-success')
             .html(feather.icons[admin ? 'x-circle' : 'check-circle'].toSvg());
-        dispatchToast("Information", response.message);
+        dispatchToast(response.title, response.message);
     }).fail(function (response) {
-        dispatchToast("Error", response.responseJSON.message);
+        dispatchToast(response.responseJSON.title, response.responseJSON.message);
     });
 });
 
@@ -263,10 +265,10 @@ $('[data-action="delete-user"]').click(function () {
             elem.parent().parent().parent().fadeOut(350, function () {
                 $(this).remove();
             });
-            dispatchToast("Information", response.message);
+            dispatchToast(response.title, response.message);
             $('#user-count').text(response.count);
         }).fail(function (response) {
-            dispatchToast("Error", response.responseJSON.message);
+            dispatchToast(response.responseJSON.title, response.responseJSON.message);
         })
     });
 });
@@ -275,11 +277,11 @@ $('[data-action="recalculate-quotas"]').click(function () {
     $.post(route("admin.quotas.recalculate"), {
         _token: csrf_token
     }).done(function (response) {
-        dispatchToast("Information", response.message);
+        dispatchToast(response.title, response.message);
         $('#total-usage').text(response.total_usage);
         updateNavbarQuota(response);
     }).fail(function (response) {
-        dispatchToast("Error", response.responseJSON.message);
+        dispatchToast(response.responseJSON.title, response.responseJSON.message);
     });
 });
 
@@ -288,9 +290,9 @@ $('[data-action="clean-up"]').click(function () {
         _token: csrf_token
     }).done(function (response) {
         $('#file-count').text(response.new_file_count);
-        dispatchToast("Information", response.message);
+        dispatchToast(response.title, response.message);
     }).fail(function (response) {
-        dispatchToast("Error", response.responseJSON.message);
+        dispatchToast(response.responseJSON.title, response.responseJSON.message);
     });
 });
 
@@ -306,8 +308,8 @@ $('[data-action="toggle-maintenance"]').click(function () {
             elem.removeClass("active");
             $('.navbar').css('border-bottom', 'none');
         }
-        dispatchToast("Information", response.message);
+        dispatchToast(response.title, response.message);
     }).fail(function (response) {
-        dispatchToast("Error", response.responseJSON.message);
+        dispatchToast(response.responseJSON.title, response.responseJSON.message);
     });
 });

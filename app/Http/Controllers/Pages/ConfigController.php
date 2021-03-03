@@ -93,6 +93,7 @@ class ConfigController extends Controller
     {
         if ($userId == Auth::user()->id) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.promote.self')
             ], 403);
         }
@@ -101,6 +102,7 @@ class ConfigController extends Controller
         $user->admin = true;
         $user->save();
         return response()->json([
+            "title" => __('general.info'),
             "message" => __('toast.message.promote', ['username' => $user->username]),
         ], 200);
     }
@@ -109,12 +111,14 @@ class ConfigController extends Controller
     {
         if ($userId == Auth::user()->id) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.demote.self')
             ], 403);
         }
 
         if ($userId == 1) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.demote.super')
             ], 403);
         }
@@ -123,6 +127,7 @@ class ConfigController extends Controller
         $user->admin = false;
         $user->save();
         return response()->json([
+            "title" => __('general.info'),
             "message" => __('toast.message.demote', ['username' => $user->username]),
         ], 200);
     }
@@ -131,12 +136,14 @@ class ConfigController extends Controller
     {
         if ($userId == Auth::user()->id) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.delete.self')
             ], 403);
         }
 
         if ($userId == 1) {
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.delete.super')
             ], 403);
         }
@@ -144,6 +151,7 @@ class ConfigController extends Controller
         $user = User::ofId($userId);
         $user->delete();
         return response()->json([
+            "title" => __('general.info'),
             "message" => __('toast.message.delete', ['username' => $user->username]),
             "count" => trans_choice('config.infos.users', User::count()),
         ]);
@@ -182,12 +190,14 @@ class ConfigController extends Controller
 
         if ($count > 0) {
             return response()->json([
+                "title" => __('general.info'),
                 "message" => trans_choice('toast.message.cleaned-orphaned', $count),
                 "new_file_count" => trans_choice('config.infos.files', Upload::count()),
             ]);
         }
 
         return response()->json([
+            "title" => __('general.info'),
             "message" => __('toast.message.no-orphaned'),
             "new_file_count" => trans_choice('config.infos.files', Upload::count()),
         ]);
@@ -212,6 +222,7 @@ class ConfigController extends Controller
         $user = Auth::user()->refresh();
         $maxQuota = $user->getEffectiveMaxDiskQuota();
         return response()->json([
+            "title" => __('general.info'),
             "message" => __('toast.message.quotas'),
             "total_usage" => Files::humanFileSize($totalUsage),
             "new_usage" => $maxQuota > 0 ? $user->disk_quota / $maxQuota : 0,
@@ -226,6 +237,7 @@ class ConfigController extends Controller
         $currentState = Setting::get('app.maintenance');
         Setting::set('app.maintenance', !$currentState);
         return response()->json([
+            "title" => __('general.info'),
             "message" => __('toast.message.maintenance.' . (!$currentState ? "on" : "off")),
             "maintenance" => (bool) !$currentState,
         ]);

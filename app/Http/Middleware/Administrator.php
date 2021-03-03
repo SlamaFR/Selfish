@@ -22,6 +22,7 @@ class Administrator
                 return redirect('/');
             }
             return response()->json([
+                "title" => __('general.error'),
                 "message" => __('toast.error.permission')
             ], 401);
         }
