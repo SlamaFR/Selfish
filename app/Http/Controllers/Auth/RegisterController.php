@@ -45,7 +45,7 @@ class RegisterController extends Controller
             return view('auth.register');
         }
         flash(__('auth.registrations.disabled'))->error();
-        return redirect($this->redirectTo);
+        return redirect('/login');
     }
 
     /**
