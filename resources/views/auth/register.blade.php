@@ -68,12 +68,12 @@
         <div class="container mt-3">
             <div class="row">
                 <div class="col text-end">
-                    <a href="{{ route('login') }}">Already registered?</a>
+                    <a href="{{ route('login') }}">@lang('auth.link.signin')</a>
                 </div>
             </div>
         </div>
         
-        <button class="mt-4 btn btn-lg btn-primary w-100" type="submit">Sign up</button>
+        <button class="mt-4 btn btn-lg btn-primary w-100" type="submit">@lang('auth.btn.signup')</button>
     </form>
 </main>
 @endsection

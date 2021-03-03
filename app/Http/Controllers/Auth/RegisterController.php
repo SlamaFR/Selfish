@@ -44,7 +44,7 @@ class RegisterController extends Controller
         if (Setting::get('app.registrations') == '1') {
             return view('auth.register');
         }
-        flash("Registrations are disabled on this Selfish server.")->error();
+        flash(__('auth.registrations.disabled'))->error();
         return redirect($this->redirectTo);
     }
 
@@ -64,7 +64,7 @@ class RegisterController extends Controller
             dd(true);
             return $this->register($request);
         }
-        flash("Registrations are disabled on this Selfish server.")->error();
+        flash(__('auth.registrations.disabled'))->error();
         return redirect($this->redirectTo);
     }
 

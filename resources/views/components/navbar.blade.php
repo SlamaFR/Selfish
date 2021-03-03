@@ -10,7 +10,7 @@
                 @if(!$meta['admin'] || ($meta['admin'] && Auth::user()->admin))
                 <li class="nav-item">
                     <a class="nav-link @if(str_starts_with(Route::currentRouteName(), $route)) active @endif" href="{{ route($route) }}">
-                        <i data-feather="{{ $meta['icon'] }}"></i>@lang('pages.' . $route)
+                        <i data-feather="{{ $meta['icon'] }}"></i>@lang('navbar.' . $route)
                     </a>
                 </li>
                 @endif
@@ -32,21 +32,21 @@
                             </div>
                             <small class="text-muted m-0 d-flex pt-1 justify-content-center" id="navbar_quota_caption">
                                 @if($maxQuota == 0)
-                                Unlimited storage
+                                @lang('navbar.storage.unlimited')
                                 @else
-                                {{ Files::humanFileSize($quota) }} / {{ Files::humanFileSize($maxQuota) }}
+                                @lang('navbar.storage.usage', ['usage' => Files::humanFileSize($quota), 'max' => Files::humanFileSize($maxQuota)])
                                 @endif
                             </small>
                         </li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item @if(Route::currentRouteName() == "user.settings") active @endif" href="{{ route('user.settings') }}"><i data-feather="settings"></i>Settings</a></li>
+                        <li><a class="dropdown-item @if(Route::currentRouteName() == "user.settings") active @endif" href="{{ route('user.settings') }}"><i data-feather="settings"></i>@lang('navbar.settings')</a></li>
                         <li>
                             <button class="dropdown-item" data-action="toggle-dark-mode-text">
-                                <i data-feather="{{ Cookie::get('theme', Setting::get('app.default_theme')) == "dark" ? "sun" : "moon" }}"></i>{{ Cookie::get('theme', Setting::get('app.default_theme')) == "dark" ? "Light" : "Dark" }} mode
+                                <i data-feather="{{ Cookie::get('theme', Setting::get('app.default_theme')) == "dark" ? "sun" : "moon" }}"></i>@lang('navbar.theme.' . Cookie::get('theme', Setting::get('app.default_theme')))
                             </button>
                         </li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ route('logout') }}"><i data-feather="log-out"></i>Log out</a></li>
+                        <li><a class="dropdown-item" href="{{ route('logout') }}"><i data-feather="log-out"></i>@lang('navbar.logout')</a></li>
                     </ul>
                 </li>
             </ul>

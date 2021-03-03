@@ -63,26 +63,26 @@
 
         <h1 class="mb-5 fw-normal" style="font-family: Pacifico, sans-serif;">{{ Config::get('app.name') }}</h1>
 
-        @if($errors->any())
+        @error('username')
         <div class="text-start alert alert-danger alert-dismissible fade show" role="alert">
-            <h5>Error</h5>
-            Incorrect username or password.
+            <h5>@lang('general.error')</h5>
+            {{ $message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @enderror
 
         @if(Setting::get('app.maintenance'))
         <div class="alert alert-warning alert-important fade show" role="alert">
-            This Selfish server is currently unavailable.
+            @lang('auth.maintenance')
         </div>
         @endif
 
         @include('flash::message')
 
-        <label for="inputusername" class="visually-hidden">Username</label>
-        <input name="username" type="text" id="inputusername" class="form-control" placeholder="Username" value="{{ old('username') }}" required @if(!old('username')) autofocus @endif>
-        <label for="inputPassword" class="visually-hidden">Password</label>
-        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required @if(old('username')) autofocus @endif>
+        <label for="inputusername" class="visually-hidden">@lang('auth.username')</label>
+        <input name="username" type="text" id="inputusername" class="form-control" placeholder="@lang('auth.username')" value="{{ old('username') }}" required @if(!old('username')) autofocus @endif>
+        <label for="inputPassword" class="visually-hidden">@lang('auth.password')</label>
+        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="@lang('auth.password')" required @if(old('username')) autofocus @endif>
 
         <div class="container">
             <div class="row">
@@ -90,15 +90,15 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="remember" id="rememberCheck">
                         <label class="form-check-label" for="rememberCheck">
-                            Remember me
+                            @lang('auth.remember')
                         </label>
                       </div>
                 </div>
                 <div class="col text-end">
-                    <a href="{{ route('password.request') }}">Forgot you password?</a>
+                    <a href="{{ route('password.request') }}">@lang('auth.link.forgot-password')</a>
                     @if(Setting::get('app.registrations') == '1')
                     <br>
-                    <a href="{{ route('register') }}">Not registered yet?</a>
+                    <a href="{{ route('register') }}">@lang('auth.link.signup')</a>
                     @endif
                 </div>
             </div>
@@ -106,7 +106,7 @@
         @if(Setting::get('app.captcha') == '1')
         <button class="mt-4 btn btn-lg btn-primary w-100 g-recaptcha" data-sitekey="{{ Setting::get('key.captcha.site') }}" data-callback='onSubmit' data-action='submit'>Log in</button>
         @else
-        <button class="mt-4 btn btn-lg btn-primary w-100" type='submit'>Log in</button>
+        <button class="mt-4 btn btn-lg btn-primary w-100" type='submit'>@lang('auth.btn.login')</button>
         @endif
     </form>
 </main>

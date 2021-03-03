@@ -24,8 +24,8 @@
 <div class="container my-3">
 
     <div class="alert alert-info alert-important" role="alert">
-        <h5>Notice</h5>
-        You can currently upload files up to {{ $max_upload_size }} each.
+        <h5>@lang('upload.card.notice')</h5>
+        @lang('upload.card.message', ['size' => $max_upload_size])
     </div>
 
     <div class="card text-justify">
@@ -33,7 +33,7 @@
             <form action="{{ route('upload') }}" method="post" id="upload-dropzone" class="form-control dropzone dz-clickable" enctype="multipart/form-data">
                 @csrf
                 <div class="dz-default dz-message" name="file">
-                    <button class="dz-button" type="button">Click or drop files here</button>
+                    <button class="dz-button" type="button">@lang('upload.dropzone.title')</button>
                 </div>
             </form>
         </div>

@@ -22,7 +22,7 @@ class Administrator
                 return redirect('/');
             }
             return response()->json([
-                "message" => "You are not authorized to do this."
+                "message" => __('toast.error.permission')
             ], 401);
         }
         return $next($request);

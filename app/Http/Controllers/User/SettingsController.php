@@ -36,8 +36,8 @@ class SettingsController extends Controller
     {
         $user = ($userId != null) ? User::ofId($userId) : Auth::user();
 
-        if ($user->super() && Auth::user()->id != $userId) {
-            flash('You cannot edit superuser.')->error();
+        if ($userId == 1 && Auth::user()->id != $userId) {
+            flash(__('toast.error.edit.super'))->error();
             return back();
         }
 
@@ -64,7 +64,7 @@ class SettingsController extends Controller
         $user->settings()->set('disk.auto_delete', request('disk_auto-delete'));
 
         $user->save();
-        flash('Successfully updated user settings.')->success();
+        flash(__('settings.user.success'))->success();
         return back();
     }
 
@@ -72,8 +72,8 @@ class SettingsController extends Controller
     {
         $user = ($userId != null) ? User::ofId($userId) : Auth::user();
 
-        if ($user->super() && Auth::user()->id != $userId) {
-            flash('You cannot edit superuser.')->error();
+        if ($userId == 1 && Auth::user()->id != $userId) {
+            flash(__('toast.error.edit.super'))->error();
             return back();
         }
 
@@ -84,7 +84,7 @@ class SettingsController extends Controller
 
         $user->password = Hash::make(request('new_password'));
         $user->save();
-        flash('Successfully updated password.')->success();
+        flash(__('settings.password.success'))->success();
         return back();
     }
 
@@ -93,8 +93,8 @@ class SettingsController extends Controller
         $user = ($userId != null) ? User::ofId($userId) : Auth::user();
         $values = ['default', 'raw'];
 
-        if ($user->super() && Auth::user()->id != $userId) {
-            flash('You cannot edit superuser.')->error();
+        if ($userId == 1 && Auth::user()->id != $userId) {
+            flash(__('toast.error.edit.super'))->error();
             return back();
         }
 
@@ -114,7 +114,7 @@ class SettingsController extends Controller
             }
         }
         $user->save();
-        flash('Successfully updated display settings.')->success();
+        flash(__('settings.display.success'))->success();
         return back();
     }
 
@@ -122,9 +122,9 @@ class SettingsController extends Controller
     {
         $user = ($userId != null) ? User::ofId($userId) : Auth::user();
 
-        if ($user->super() && Auth::user()->id != $userId) {
+        if ($userId == 1 && Auth::user()->id != $userId) {
             return response()->json([
-                "message" => "You cannot edit superuser."
+                "message" => __('toast.error.edit.super')
             ], 403);
         }
 
@@ -135,7 +135,7 @@ class SettingsController extends Controller
         $user->access_token = $token;
         $user->save();
         return response()->json([
-            "message" => ($userId == null) ? "Your personnal access token has been regenerated and copied to clipboard." : "<strong>" . $user->username . "</strong>'s personnal access token has been regenerated and copied to clipboard.",
+            "message" => ($userId == null) ? __('toast.message.token.self') : __('toast.message.token', ['name' => $user->username]),
             "token" => $token
         ], 200);
     }

@@ -47,8 +47,8 @@ class ConfigController extends Controller
     {
         $user = User::ofId($userId);
 
-        if ($user->super() && Auth::user()->id != $userId) {
-            flash("You cannot edit superuser.")->error();
+        if ($userId == 1 && Auth::user()->id != $userId) {
+            flash(__('toast.error.edit.super'))->error();
             return back();
         }
 
@@ -73,8 +73,8 @@ class ConfigController extends Controller
             "key_captcha_site" => ['required_if:app_captcha,1'],
             "key_captcha_private" => ['required_if:app_captcha,1'],
         ], [
-            "key_captcha_site.required_if" => "The site key is required to enable reCAPTCHA.",
-            "key_captcha_private.required_if" => "The private key is required to enable reCAPTCHA.",
+            "key_captcha_site.required_if" => __("config.captcha.site.required"),
+            "key_captcha_private.required_if" => __("config.captcha.private.required"),
         ]);
 
         Setting::set('app.captcha', request('app_captcha'));
@@ -85,7 +85,7 @@ class ConfigController extends Controller
         Setting::set('key.captcha.site', request('key_captcha_site'));
         Setting::set('key.captcha.private', request('key_captcha_private'));
 
-        flash("Successfully updated config.")->success();
+        flash(__('config.success', [], request('app_locale')))->success();
         return back();
     }
 
@@ -93,7 +93,7 @@ class ConfigController extends Controller
     {
         if ($userId == Auth::user()->id) {
             return response()->json([
-                "message" => "You cannot promote yourself."
+                "message" => __('toast.error.promote.self')
             ], 403);
         }
 
@@ -101,7 +101,7 @@ class ConfigController extends Controller
         $user->admin = true;
         $user->save();
         return response()->json([
-            "message" => "<strong>" . $user->username . "</strong> is now administrator."
+            "message" => __('toast.message.promote', ['username' => $user->username]),
         ], 200);
     }
 
@@ -109,13 +109,13 @@ class ConfigController extends Controller
     {
         if ($userId == Auth::user()->id) {
             return response()->json([
-                "message" => "You cannot demote yourself."
+                "message" => __('toast.error.demote.self')
             ], 403);
         }
 
         if ($userId == 1) {
             return response()->json([
-                "message" => "You cannot demote superuser."
+                "message" => __('toast.error.demote.super')
             ], 403);
         }
 
@@ -123,7 +123,7 @@ class ConfigController extends Controller
         $user->admin = false;
         $user->save();
         return response()->json([
-            "message" => "<strong>" . $user->username . "</strong> is no longer administrator."
+            "message" => __('toast.message.demote', ['username' => $user->username]),
         ], 200);
     }
 
@@ -131,21 +131,21 @@ class ConfigController extends Controller
     {
         if ($userId == Auth::user()->id) {
             return response()->json([
-                "message" => "You cannot delete yourself."
+                "message" => __('toast.error.delete.self')
             ], 403);
         }
 
         if ($userId == 1) {
             return response()->json([
-                "message" => "You cannot delete superuser."
+                "message" => __('toast.error.delete.super')
             ], 403);
         }
 
         $user = User::ofId($userId);
         $user->delete();
         return response()->json([
-            "message" => "Successfully deleted <strong>" . $user->username . "</strong>",
-            "count" => User::count() . " users"
+            "message" => __('toast.message.delete', ['username' => $user->username]),
+            "count" => trans_choice('config.infos.users', User::count()),
         ]);
     }
 
@@ -155,7 +155,7 @@ class ConfigController extends Controller
 
         $register->validator(request()->all())->validate();
         $register->create(request()->all());
-        flash("User successfully created.")->success();
+        flash(__('config.user.success'))->success();
         return back();
     }
 
@@ -182,14 +182,14 @@ class ConfigController extends Controller
 
         if ($count > 0) {
             return response()->json([
-                "message" => "Successfully removed " . $count . " orphaned files. You may recalculate quotas now.",
-                "new_file_count" => Upload::count() . " files",
+                "message" => trans_choice('toast.message.cleaned-orphaned', $count),
+                "new_file_count" => trans_choice('config.infos.files', Upload::count()),
             ]);
         }
 
         return response()->json([
-            "message" => "No orphaned file found.",
-            "new_file_count" => Upload::count() . " files",
+            "message" => __('toast.message.no-orphaned'),
+            "new_file_count" => trans_choice('config.infos.files', Upload::count()),
         ]);
     }
 
@@ -212,7 +212,7 @@ class ConfigController extends Controller
         $user = Auth::user()->refresh();
         $maxQuota = $user->getEffectiveMaxDiskQuota();
         return response()->json([
-            "message" => "Successfully recalculated quotas.",
+            "message" => __('toast.message.quotas'),
             "total_usage" => Files::humanFileSize($totalUsage),
             "new_usage" => $maxQuota > 0 ? $user->disk_quota / $maxQuota : 0,
             "new_quota" => Files::humanFileSize($user->disk_quota),
@@ -226,7 +226,7 @@ class ConfigController extends Controller
         $currentState = Setting::get('app.maintenance');
         Setting::set('app.maintenance', !$currentState);
         return response()->json([
-            "message" => !$currentState ? "Selfish is now in maintenance mode." : "Selfish is now live.",
+            "message" => __('toast.message.maintenance.' . (!$currentState ? "on" : "off")),
             "maintenance" => (bool) !$currentState,
         ]);
     }

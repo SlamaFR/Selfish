@@ -18,11 +18,8 @@ class Maintenance
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($request->path() == "login") {
-            return $next($request);
-        }
-        if (Setting::get('app.maintenance') && (Auth::guest() || !Auth::user()->admin)) {
-            return abort(503);
+        if ($request->path() != "login" && Setting::get('app.maintenance') && (Auth::guest() || !Auth::user()->admin)) {
+            return redirect('/login');
         }
         return $next($request);
     }

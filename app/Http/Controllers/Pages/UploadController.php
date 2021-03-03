@@ -36,7 +36,7 @@ class UploadController extends Controller
         if ($userMaxQuota > 0) {
             if ($fileSize > $userMaxQuota) {
                 return response()->json([
-                    "error" => "File is too large."
+                    "error" => __('upload.error.too-big')
                 ], 403);
             }
             if ($fileSize + $userQuota > $userMaxQuota) {
@@ -47,7 +47,7 @@ class UploadController extends Controller
                     } while ($fileSize + $user->refresh()->disk_quota > $userMaxQuota);
                 } else {
                     return response()->json([
-                        "error" => "Disk quota exceeded."
+                        "error" => __('upload.error.quota')
                     ], 403);
                 }
             }
@@ -66,11 +66,11 @@ class UploadController extends Controller
         $user->disk_quota = $user->disk_quota + $media->media_size;
         $user->save();
 
-        return '{
-            "status": 200,
-            "media_code": "' . $code . '", 
-            "url": "' . $media->url() . '"
-        }';
+        return response()->json([
+            "status" => 200,
+            "media_code" => $code,
+            "url" => $media->url(),
+        ]);
     }
 
     public function uploadMedia()
@@ -83,9 +83,9 @@ class UploadController extends Controller
     {
         $user = User::where('access_token', $token)->first();
         if ($user === null) {
-            return response('{
-                "error": "The provided token does not exist."
-            }', 401);
+            return response()->json([
+                "error" => __('upload.error.token')
+            ], 401);
         }
 
         return $this->upload($user, request());
@@ -97,13 +97,13 @@ class UploadController extends Controller
 
         if ($upload === null) {
             return response()->json([
-                "message" => "This media no longer exists."
+                "message" => __('toast.error.not-found')
             ], 404);
         }
 
         if (!Auth::user()->admin && $upload->user_code != Auth::user()->code) {
             return response()->json([
-                "message" => "You are not authorized to do this."
+                "message" => __('toast.error.permission')
             ], 403);
         }
 
@@ -114,7 +114,7 @@ class UploadController extends Controller
             "btnIcon" => $upload->visible ? "eye-off" : "eye",
             "stateIcon" => $upload->visible ? "check-circle" : "x-circle",
             "stateColor" => $upload->visible ? "text-success" : "text-danger",
-            "message" => "Media <strong>" . $upload->media_name . "</strong> is now " . ($upload->visible ? "visible" : "invisible") . "."
+            "message" => __('toast.message.' . ($upload->visible ? "visible" : "invisible"), ['name' => $upload->media_name])
         ], 200);
     }
 
@@ -124,7 +124,7 @@ class UploadController extends Controller
 
         if ($upload == null) {
             return response()->json([
-                "message" => "This media no longer exists."
+                "message" => __('toast.error.not-found')
             ], 404);
         }
 
@@ -133,7 +133,7 @@ class UploadController extends Controller
 
         if (!$user->admin && $upload->user_code != $user->code) {
             return response()->json([
-                "message" => "You are not authorized to do this."
+                "message" => __('toast.error.permission')
             ], 403);
         }
 
@@ -141,7 +141,8 @@ class UploadController extends Controller
         $user->disk_quota = $user->disk_quota - $upload->media_size;
         $user->save();
         $upload->delete();
-        return response()->json([
+
+        return redirect('/')->withJson([
             'new_quota' => Files::humanFileSize($user->disk_quota),
             'max_quota' => Files::humanFileSize($maxQuota),
             'new_usage' => $maxQuota > 0 ? $user->disk_quota / $maxQuota : 0,
