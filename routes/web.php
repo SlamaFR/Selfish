@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Storage;
 */
 
 Route::get('/', function () {
+    if (Auth::guest()) {
+        return redirect('/login');
+    }
     return redirect('/files');
 })->name('home');
 
