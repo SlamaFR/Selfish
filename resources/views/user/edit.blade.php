@@ -71,7 +71,7 @@
                                         <i data-feather="refresh-cw"></i>@lang('settings.user.token.regenerate')
                                     </button>
                                 </div>
-                                <small class="text-muted">@lang('general.hover.to.see')</small>
+                                <small class="ms-1 text-muted">@lang('general.hover.to.see')</small>
                             </div>
                         </div>
                         <hr>
@@ -99,7 +99,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <small class="m-0 text-muted">@lang('config.settings.default-quota.caption')</small>
+                                <small class="ms-1 text-muted">@lang('config.settings.default-quota.caption')</small>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -115,7 +115,7 @@
                                         <label class="form-check-label" for="disk_auto-delete_disabled">@lang('config.state.disabled')</label>
                                     </div>
                                 </div>
-                                <small class="m-0 text-muted">@lang('settings.user.auto-delete.caption')</small>
+                                <small class="ms-1 text-muted">@lang('settings.user.auto-delete.caption')</small>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-icon btn-outline-success"><i data-feather="save"></i>@lang('general.save')</button>

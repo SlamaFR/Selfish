@@ -117,13 +117,13 @@
                                 <td>{{ $user->email }}</td>
                                 <td scope="col">
                                     <div class="col d-flex text-center btn-group" data-id="{{ $user->id }}">
-                                        <a class="btn btn-sm px-1 btn-outline-secondary @if($user->super()) disabled @endif" title="@lang('config.users.table.btn.edit')" href="{{ route('admin.user.edit', ['userId' => $user->id]) }}">
+                                        <a class="btn btn-sm px-1 btn-outline-secondary" title="@lang('config.users.table.btn.edit')" href="{{ route('admin.user.edit', ['userId' => $user->id]) }}">
                                             <i data-feather="edit-2"></i>
                                         </a>
-                                        <a class="btn btn-sm px-1 btn-outline-warning @if($user->super()) disabled @endif" data-action="toggle-admin" data-admin="{{ (int) $user->admin }}" title="{{ $user->admin ? __('config.users.table.btn.demote') : __('config.users.table.btn.promote') }}">
+                                        <a class="btn btn-sm px-1 btn-outline-warning" data-action="toggle-admin" data-admin="{{ (int) $user->admin }}" title="{{ $user->admin ? __('config.users.table.btn.demote') : __('config.users.table.btn.promote') }}">
                                             <i data-feather="{{ $user->admin ? "shield-off" : "shield" }}"></i>
                                         </a>
-                                        <a class="btn btn-sm px-1 btn-outline-danger @if($user->super()) disabled @endif" data-action="delete-user" title="@lang('config.users.table.btn.delete')">
+                                        <a class="btn btn-sm px-1 btn-outline-danger" data-action="delete-user" title="@lang('config.users.table.btn.delete')">
                                             <i data-feather="trash-2"></i>
                                         </a>
                                     </div>
@@ -187,7 +187,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <small class="m-0 text-muted">@lang('config.settings.default-quota.caption')</small>
+                                        <small class="ms-1 text-muted">@lang('config.settings.default-quota.caption')</small>
                                     </div>
                                 </div>
                                 <hr>
@@ -196,21 +196,21 @@
                                     <div class="col my-auto">
                                         <div class="pt-2">
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="app_captcha" id="app_captcha_enabled" value="1" @if($useCaptcha) checked @endif>
+                                                <input class="form-check-input" type="radio" name="app_captcha" id="app_captcha_enabled" value="1" @if(old('app_captcha') ?? $useCaptcha) checked @endif>
                                                 <label class="form-check-label" for="app_captcha_enabled">@lang('config.state.enabled')</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="app_captcha" id="app_captcha_disabled" value="0" @if(!$useCaptcha) checked @endif>
+                                                <input class="form-check-input" type="radio" name="app_captcha" id="app_captcha_disabled" value="0" @if(!old('app_captcha') && !$useCaptcha) checked @endif>
                                                 <label class="form-check-label" for="app_captcha_disabled">@lang('config.state.disabled')</label>
                                             </div>
                                         </div>
-                                        <small class="text-muted">@lang('config.settings.captcha.caption')</small>
+                                        <small class="ms-1 text-muted">@lang('config.settings.captcha.caption')</small>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <label class="col-sm-5 col-form-label">@lang('config.settings.captcha.site-key')</label>
                                     <div class="col">
-                                        <input type="password" class="form-control hover-to-see @error('key_captcha_site') is-invalid @enderror" name="key_captcha_site" value="{{ Setting::get('key.captcha.site') }}" @if(!$useCaptcha) disabled @endif>
+                                        <input type="password" class="form-control hover-to-see @error('key_captcha_site') is-invalid @enderror" name="key_captcha_site" value="{{ Setting::get('key.captcha.site') }}" @if(!old('app_captcha') && !$useCaptcha) disabled @endif>
                                         @error('key_captcha_site')
                                         <span class="invalid-feedback text-start ms-1 mb-1" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -221,7 +221,7 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-5 col-form-label">@lang('config.settings.captcha.private-key')</label>
                                     <div class="col">
-                                        <input type="password" class="form-control hover-to-see @error('key_captcha_private') is-invalid @enderror" name="key_captcha_private" value="{{ Setting::get('key.captcha.private') }}" @if(!$useCaptcha) disabled @endif>
+                                        <input type="password" class="form-control hover-to-see @error('key_captcha_private') is-invalid @enderror" name="key_captcha_private" value="{{ Setting::get('key.captcha.private') }}" @if(!old('app_captcha') && !$useCaptcha) disabled @endif>
                                         @error('key_captcha_private')
                                         <span class="invalid-feedback text-start ms-1 mb-1" role="alert">
                                             <strong>{{ $message }}</strong>
