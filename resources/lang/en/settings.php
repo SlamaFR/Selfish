@@ -14,7 +14,7 @@ return [
     "user.quota.custom" => "Custom",
     "user.custom-quota" => "Custom disk quota",
     "user.auto-delete" => "Auto-delete",
-    "user.auto-delete.caption" => "Older files will automatically be deleted when exceeding disk quota.",
+    "user.auto-delete.caption" => "Oldest files will automatically be deleted when exceeding disk quota.",
     "user.success" => "Successfully updated user settings.",
 
 

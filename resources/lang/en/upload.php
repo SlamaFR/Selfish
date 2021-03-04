@@ -8,7 +8,7 @@ return [
     "dropzone.title" => "Click or drop files here",
 
 
-    "error.too-big" => "Ths file is too big.",
+    "error.too-big" => "The file is too big.",
     "error.quota" => "Disk quota exceeded.",
     "error.token" => "The provided token does not exist.",
 

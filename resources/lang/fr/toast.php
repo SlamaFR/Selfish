@@ -14,7 +14,7 @@ return [
     "error.not-found" => "Ce fichier n'existe plus.",
 
     "message.promote" => "<strong>:username</strong> est désormais administrateur.",
-    "message.demote" => "<strong>:username</strong> n'est plus administrator.",
+    "message.demote" => "<strong>:username</strong> n'est plus administrateur.",
     "message.delete" => "<strong>:username</strong> supprimé(e) avec succès.",
     "message.no-orphaned" => "Aucun fichier orphelin trouvé.",
     "message.cleaned-orphaned" => ":count fichier orphelin supprimé avec succès. Vous pouvez maintenance recaluler les quotas.|:count fichiers orphelins supprimés avec succès. Vous pouvez maintenance recaluler les quotas.",
