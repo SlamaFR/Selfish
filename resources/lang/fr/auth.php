@@ -9,6 +9,8 @@ return [
     "email" => "Adresse électronique",
     "password" => "Mot de passe",
     "password.confirmation" => "Confirmation du mot de passe",
+    "password.reset-link.send" => "Envoyer le lien de réinitialisation",
+    "password.reset" => "Réinitialiser le mot de passe",
     "remember" => "Se souvenir de moi",
 
 

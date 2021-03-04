@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => __('general.page.signin')])
 
 @section('head.scripts')
 <script src="https://www.google.com/recaptcha/api.js"></script>
@@ -104,7 +104,7 @@
             </div>
         </div>
         @if(Setting::get('app.captcha') == '1')
-        <button class="mt-4 btn btn-lg btn-primary w-100 g-recaptcha" data-sitekey="{{ Setting::get('key.captcha.site') }}" data-callback='onSubmit' data-action='submit'>Log in</button>
+        <button class="mt-4 btn btn-lg btn-primary w-100 g-recaptcha" data-sitekey="{{ Setting::get('key.captcha.site') }}" data-callback='onSubmit' data-action='submit'>@lang('auth.btn.login')</button>
         @else
         <button class="mt-4 btn btn-lg btn-primary w-100" type='submit'>@lang('auth.btn.login')</button>
         @endif

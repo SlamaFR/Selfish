@@ -9,6 +9,8 @@ return [
     "email" => "Email",
     "password" => "Password",
     "password.confirmation" => "Password confirm",
+    "password.reset-link.send" => "Send reset link",
+    "password.reset" => "Reset password",
     "remember" => "Remember me",
 
 
