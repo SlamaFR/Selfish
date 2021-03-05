@@ -144,7 +144,7 @@
                         <div class="row">
                             <div class="col">
                                 <div class="row mb-3">
-                                    <label class="col-sm-5 col-form-label" for="app_locale">@lang('config.settings.language')</label>
+                                    <label class="col-sm-4 col-form-label" for="app_locale">@lang('config.settings.language')</label>
                                     <div class="col">
                                         <select name="app.locale" id="app_locale" class="form-select form-control">
                                             @foreach(Config::get('app.locales') as $locale => $name)
@@ -154,7 +154,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label class="col-sm-5 col-form-label" for="app_default-theme">@lang('config.settings.default-theme')</label>
+                                    <label class="col-sm-4 col-form-label" for="app_default-theme">@lang('config.settings.default-theme')</label>
                                     <div class="col">
                                         <select name="app_default-theme" id="app_default-theme" class="form-select form-control">
                                             <option value="dark" @if($defaultTheme == 'dark') selected @endif>@lang('config.theme.dark')</option>
@@ -163,7 +163,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label class="col-sm-5 col-form-label">@lang('config.settings.registrations')</label>
+                                    <label class="col-sm-4 col-form-label">@lang('config.settings.registrations')</label>
                                     <div class="col my-auto">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="app_registrations" id="app_registration_enabled" value="1" @if($registrations) checked @endif>
@@ -177,7 +177,7 @@
                                 </div>
                                 <hr>
                                 <div class="row mb-3">
-                                    <label class="col-sm-5 col-form-label" for="disk_max-quota">@lang('config.settings.default-quota')</label>
+                                    <label class="col-sm-4 col-form-label" for="disk_max-quota">@lang('config.settings.default-quota')</label>
                                     <div class="col">
                                         <div class="input-group">
                                             <input type="number" name="disk_max-quota" class="form-control" min="0" value="{{ $maxDiskQuota >> $maxDiskQuotaShift }}">
@@ -187,12 +187,12 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <small class="ms-1 text-muted">@lang('config.settings.default-quota.caption')</small>
+                                        <small class="text-muted">@lang('config.settings.default-quota.caption')</small>
                                     </div>
                                 </div>
                                 <hr>
                                 <div class="row mb-3">
-                                    <label class="col-sm-5 col-form-label">@lang('config.settings.captcha')</label>
+                                    <label class="col-sm-4 col-form-label">@lang('config.settings.captcha')</label>
                                     <div class="col my-auto">
                                         <div class="pt-2">
                                             <div class="form-check form-check-inline">
@@ -204,11 +204,11 @@
                                                 <label class="form-check-label" for="app_captcha_disabled">@lang('config.state.disabled')</label>
                                             </div>
                                         </div>
-                                        <small class="ms-1 text-muted">@lang('config.settings.captcha.caption')</small>
+                                        <small class="text-muted">@lang('config.settings.captcha.caption')</small>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label class="col-sm-5 col-form-label">@lang('config.settings.captcha.site-key')</label>
+                                    <label class="col-sm-4 col-form-label">@lang('config.settings.captcha.site-key')</label>
                                     <div class="col">
                                         <input type="password" class="form-control hover-to-see @error('key_captcha_site') is-invalid @enderror" name="key_captcha_site" value="{{ Setting::get('key.captcha.site') }}" @if(!old('app_captcha') && !$useCaptcha) disabled @endif>
                                         @error('key_captcha_site')
@@ -219,7 +219,7 @@
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label class="col-sm-5 col-form-label">@lang('config.settings.captcha.private-key')</label>
+                                    <label class="col-sm-4 col-form-label">@lang('config.settings.captcha.private-key')</label>
                                     <div class="col">
                                         <input type="password" class="form-control hover-to-see @error('key_captcha_private') is-invalid @enderror" name="key_captcha_private" value="{{ Setting::get('key.captcha.private') }}" @if(!old('app_captcha') && !$useCaptcha) disabled @endif>
                                         @error('key_captcha_private')
