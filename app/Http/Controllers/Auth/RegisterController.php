@@ -25,7 +25,9 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use RegistersUsers {
+        register as continue;
+    }
 
     /**
      * Where to redirect users after registration.
@@ -61,8 +63,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         if (Setting::get('app.registrations') == '1') {
-            dd(true);
-            return $this->register($request);
+            return $this->continue($request);
         }
         flash(__('auth.registrations.disabled'))->error();
         return redirect($this->redirectTo);
