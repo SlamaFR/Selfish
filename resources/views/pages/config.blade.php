@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => __('general.page.config')])
 
 @section('head.styles')
 <style>

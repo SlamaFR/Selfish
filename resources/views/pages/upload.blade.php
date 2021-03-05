@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => __('general.page.upload')])
 
 @section('head.scripts')
 <script src="{{ asset('js/dropzone.min.js') }}"></script>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => $file->media_name])
 
 @php
 use App\Models\User;

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['title' => ($self ? __('general.page.settings.self') : __('general.page.settings', ['username' => $user->username]))])
 
 @section('head.styles')
 <style>

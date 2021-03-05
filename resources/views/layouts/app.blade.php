@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ Config::get('app.name') }}</title>
+    <title>{{ Config::get('app.name') }} &nbsp;&bull;&nbsp; {{ $title ?? '' }}</title>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" 
