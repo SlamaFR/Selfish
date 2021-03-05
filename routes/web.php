@@ -24,6 +24,7 @@ Route::get('/', function () {
 })->name('home');
 
 Auth::routes();
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::post('/mode/{mode}', function ($mode) {
     if ($mode == 'light' || $mode == 'dark') {
