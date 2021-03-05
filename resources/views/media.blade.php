@@ -9,10 +9,6 @@ use App\Models\User;
 <script type="text/javascript" src="{{ asset('js/clipboard.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/highlight.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/highlight-lines.min.js') }}"></script>
-<script>
-    hljs.initHighlightingOnLoad();
-    hljs.initLineNumbersOnLoad();
-</script>
 @endsection
 
 @section('head.styles')
@@ -54,12 +50,11 @@ use App\Models\User;
         border-right: 1px solid #4b4b4b;
         vertical-align: top;
         padding-right: 5px!important;
-
     }
 
     .hljs-ln-code {
         padding-left: 5px!important;
-	    white-space: pre-wrap;
+	    white-space: pre;
     }
 </style>
 @endsection
@@ -96,7 +91,7 @@ use App\Models\User;
         </div>
         <p class="fw-bold my-3">{{ $file->media_name }}</p>
     @elseif($media_type == 'text')
-        <div class="container px-4 text-start">
+        <div class="container px-2 text-start">
             @php($fileExplode = explode('.', $file->media_name))
             <pre><code @if(end($fileExplode) === 'txt') class="plaintext" @endif>{{ $media_raw }}</code></pre>
         </div>
@@ -116,6 +111,10 @@ use App\Models\User;
 <script>
     const player = new Plyr('#player', {
         ratio: "16:9"
+    });
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad({
+        singleLine: true
     });
 </script>
 @endsection
