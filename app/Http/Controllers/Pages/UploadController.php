@@ -112,6 +112,7 @@ class UploadController extends Controller
         $upload->visible = !$upload->visible;
         $upload->save();
         return response()->json([
+            "title" => __('general.info'),
             "visible" => (int) $upload->visible,
             "btnIcon" => $upload->visible ? "eye-off" : "eye",
             "stateIcon" => $upload->visible ? "check-circle" : "x-circle",
