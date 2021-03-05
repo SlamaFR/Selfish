@@ -27,7 +27,7 @@
                     <i data-feather="file-text"></i>
                 </a>
             </li>
-            @if(!Auth::guest() && Auth::user()->code == $user_code || Auth::user()->admin)
+            @if(!Auth::guest() && (Auth::user()->code == $user_code || Auth::user()->admin))
                 <li class="nav-item" data-id="{{ $file->media_code }}" data-name="{{ $file->media_name }}" data-visible="{{ $file->visible }}">
                     <a data-action="toggle-visibility" class="nav-link">
                         <i data-feather="{{ $file->visible ? "eye-off" : "eye"}}"></i>
