@@ -10,6 +10,8 @@ use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Support\Facades\Config;
 use App\Helpers\Files;
 
+use App\Notifications\ResetPassword as ResetPasswordNotification;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasSettingsField;
@@ -93,5 +95,16 @@ class User extends Authenticatable
         } else {
             return $this->max_disk_quota;
         }
+    }
+    
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
