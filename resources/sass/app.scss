@@ -1,8 +1,15 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Pacifico');
 
 // Variables
-@import 'variables';
+//@import 'variables';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+// Styles
+@import 'darktheme';
+@import 'plyr';
+@import 'atom-one-dark';
+@import 'dropzone';
+@import 'style';

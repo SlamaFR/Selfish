@@ -9,8 +9,14 @@ window._ = require('lodash');
 try {
     window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
+    window.hljs = require('highlightjs');
+    require('highlightjs-line-numbers.js');
+    require('dropzone');
+    window.Plyr = require('plyr');
+    window.ClipboardJS = require('clipboard');
+    window.feather = require('feather-icons');
 
-    require('bootstrap');
+    window.bootstrap = require('bootstrap');
 } catch (e) {}
 
 /**
