@@ -1,21 +1,5 @@
 @extends('layouts.app', ['title' => ($self ? __('general.page.settings.self') : __('general.page.settings', ['username' => $user->username]))])
 
-@section('head.styles')
-<style>
-    td {
-        padding: 8px!important;
-    }
-
-    legend {
-        padding: 0!important;
-    }
-
-    label .feather {
-        margin-right: .5rem;
-    }
-</style>
-@endsection
-
 @section('content')
 @include('components.navbar')
 @include('components.toast')

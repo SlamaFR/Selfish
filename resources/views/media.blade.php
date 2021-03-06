@@ -4,57 +4,10 @@
 use App\Models\User;
 @endphp
 
-@section('head.scripts')
-<script type="text/javascript" src="{{ asset('js/plyr.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/clipboard.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/highlight.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/highlight-lines.min.js') }}"></script>
-@endsection
-
 @section('head.styles')
-<link href="{{ asset('css/plyr.css') }}" rel="stylesheet">
-<link href="{{ asset('css/atom-one-dark.css') }}" rel="stylesheet">
 <style>
-    .nav-link {
-        cursor: pointer;
-    }
-
-    .pdf-viewer {
-        width: 100%;
-        height: 80vh;
-    }
-
     body .container {
-        max-width: 100%!important;
-    }
-
-    .wrapper {
-        max-width: 1160px;
-        margin: 0 auto;
-    }
-
-    h1 .file-icon {
-        height: 72px;
-        width: 72px;
-    }
-
-    .hljs-ln-numbers {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        text-align: right;
-        color: #7d7d7d;
-        border-right: 1px solid #4b4b4b;
-        vertical-align: top;
-        padding-right: 5px!important;
-    }
-
-    .hljs-ln-code {
-        padding-left: 5px!important;
-	    white-space: pre;
+        max-width: 100% !important;
     }
 </style>
 @endsection
@@ -109,9 +62,6 @@ use App\Models\User;
 
 @section('script')
 <script>
-    const player = new Plyr('#player', {
-        ratio: "16:9"
-    });
     hljs.initHighlightingOnLoad();
     hljs.initLineNumbersOnLoad({
         singleLine: true

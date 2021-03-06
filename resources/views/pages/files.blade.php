@@ -4,35 +4,6 @@
 use App\Models\User;
 @endphp
 
-@section('head.styles')
-<style>
-    .table-bordered>:not(caption)>*>:first-child,
-    .table-bordered>:not(caption)>*>:last-child,
-    .table-bordered>:not(caption)>:last-child {
-        border-left-width: 0;
-        border-bottom-width: 0;
-        border-right-width: 0;
-    }
-
-    .table > tbody > tr:last-child > td:first-child {
-        border-bottom-left-radius: .25rem;
-    }
-
-    .table > tbody > tr:last-child > td:last-child {
-        border-bottom-right-radius: .25rem;
-    }
-    
-    .file-icon {
-        height: 32px;
-        width: 32px;
-    }
-</style>
-@endsection
-
-@section('head.scripts')
-<script type="text/javascript" src="{{ asset('js/clipboard.min.js') }}"></script>
-@endsection
-
 @section('content')
 @include('components.navbar')
 

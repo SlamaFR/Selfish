@@ -2,39 +2,6 @@
 
 @section('head.styles')
 <style>
-    .table-bordered>:not(caption)>*>:first-child,
-    .table-bordered>:not(caption)>*>:last-child,
-    .table-bordered>:not(caption)>:last-child {
-        border-left-width: 0;
-        border-bottom-width: 0;
-        border-right-width: 0;
-    }
-
-    .table > tbody > tr:last-child > td:first-child {
-        border-bottom-left-radius: .25rem;
-    }
-
-    .table > tbody > tr:last-child > td:last-child {
-        border-bottom-right-radius: .25rem;
-    }
-    
-    .file-icon {
-        height: 32px;
-        width: 32px;
-    }
-
-    .col-stats .feather {
-        width: 32px;
-        height: 32px;
-    }
-    
-    .form-signin .form-control {
-        position: relative;
-        box-sizing: border-box;
-        height: auto;
-        font-size: 16px;
-    }
-
     .form-signin .form-control:focus {
         z-index: 2;
     }
@@ -282,17 +249,6 @@
 @endsection
 
 @section('script')
-<script>
-    let registerModal = new bootstrap.Modal($('#register-modal').get(0));
-
-    $('#new-user').click(function () {
-        registerModal.show();
-    });
-
-</script>
-@endsection
-
-@section('script2')
 @if($errors->has('username') || $errors->has('email') || $errors->has('password') || $errors->has('password_confirmation'))
 <script>
     registerModal.show();
