@@ -145,7 +145,7 @@ $(document).ready(function () {
             _token: csrf_token
         }).done(function (response) {
             $('#personnal-token').val(response.token);
-            navigator.clipboard.writeText(response.token);
+            $('.copy').click();
             dispatchToast(response.title, response.message);
         }).fail(function (response) {
             dispatchToast(response.responseJSON.title, response.responseJSON.message);
@@ -196,7 +196,7 @@ $(document).ready(function () {
 
     function updateNavbarQuota(response) {
         if (!response.unlimited_quota) {
-            $('#navbar_quota_caption').text(response.new_quota + " / " + response.max_quota);
+            $('#navbar_quota_caption').html(response.new_quota + " / " + response.max_quota);
             let bar = $('#navbar_quota_progress');
             bar.css('width', response.new_usage * 100 + "%");
             bar.removeClass();
@@ -284,7 +284,7 @@ $(document).ready(function () {
                     $(this).remove();
                 });
                 dispatchToast(response.title, response.message);
-                $('#user-count').text(response.count);
+                $('#user-count').html(response.count);
             }).fail(function (response) {
                 dispatchToast(response.responseJSON.title, response.responseJSON.message);
             })
@@ -296,7 +296,7 @@ $(document).ready(function () {
             _token: csrf_token
         }).done(function (response) {
             dispatchToast(response.title, response.message);
-            $('#total-usage').text(response.total_usage);
+            $('#total-usage').html(response.total_usage);
             updateNavbarQuota(response);
         }).fail(function (response) {
             dispatchToast(response.responseJSON.title, response.responseJSON.message);
@@ -307,7 +307,7 @@ $(document).ready(function () {
         $.post(route("admin.clean-up"), {
             _token: csrf_token
         }).done(function (response) {
-            $('#file-count').text(response.new_file_count);
+            $('#file-count').html(response.new_file_count);
             dispatchToast(response.title, response.message);
         }).fail(function (response) {
             dispatchToast(response.responseJSON.title, response.responseJSON.message);

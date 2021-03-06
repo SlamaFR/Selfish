@@ -210,15 +210,15 @@
                     <div class="row text-center pt-2">
                         <div class="col col-stats">
                             <i data-feather="file" class="w-100 mb-1" stroke-width="1.5"></i>
-                            <span id="file-count">{{ trans_choice('config.infos.files', Upload::count()) }}</span>
+                            <span id="file-count">{!! trans_choice('config.infos.files', Upload::count()) !!}</span>
                         </div>
                         <div class="col col-stats">
                             <i data-feather="user" class="w-100 mb-1" stroke-width="1.5"></i>
-                            <span id="user-count">{{ trans_choice('config.infos.users', User::count()) }}</span> 
+                            <span id="user-count">{!! trans_choice('config.infos.users', User::count()) !!}</span> 
                         </div>
                         <div class="col col-stats">
                             <i data-feather="hard-drive" class="w-100 mb-1" stroke-width="1.5"></i>
-                            <span id="total-usage">{{ Files::humanFileSize(User::all()->map(function ($item, $key) {return $item->disk_quota;})->sum()) }}</span>
+                            <span id="total-usage">{!! Files::humanFileSize(User::all()->map(function ($item, $key) {return $item->disk_quota;})->sum()) !!}</span>
                         </div>
                     </div>
                     <hr>
