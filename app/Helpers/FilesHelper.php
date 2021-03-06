@@ -9,12 +9,12 @@ class Files
     public static function humanFileSize($size, $unit = "", $digits = 2)
     {
         if ((!$unit && $size >= 1 << 30) || $unit == "GiB")
-            return number_format($size / (1 << 30), $digits, '.', ' ') . " " . __('units.GiB');
+            return number_format($size / (1 << 30), $digits, '.', ' ') . "&nbsp;" . __('units.GiB');
         if ((!$unit && $size >= 1 << 20) || $unit == "MiB")
-            return number_format($size / (1 << 20), $digits, '.', ' ') . " " . __('units.MiB');
+            return number_format($size / (1 << 20), $digits, '.', ' ') . "&nbsp;" . __('units.MiB');
         if ((!$unit && $size >= 1 << 10) || $unit == "KiB")
-            return number_format($size / (1 << 10), $digits, '.', ' ') . " " . __('units.KiB');
-        return number_format($size, 0, '.', ' ') . " " . __('units.bytes');
+            return number_format($size / (1 << 10), $digits, '.', ' ') . "&nbsp;" . __('units.KiB');
+        return number_format($size, 0, '.', ' ') . "&nbsp;" . __('units.bytes');
     }
 
     public static function stringToBytes($str)

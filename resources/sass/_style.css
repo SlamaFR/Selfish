@@ -57,20 +57,8 @@
     z-index: 2;
 }
 
-.form-signin input[name="email"] {
-    margin-top: 10px;
-}
-
-.form-signin input[name="password"] {
-    margin-top: 10px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-.form-signin input[name="password_confirmation"] {
-    margin-top: -1px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+[data-theme=dark] .form-control[readonly] {
+    background-color: #101010;
 }
 
 .toast-body {

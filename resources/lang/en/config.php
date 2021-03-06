@@ -35,8 +35,8 @@ return [
 
 
     "infos.title" => "Information",
-    "infos.files" => ":count file|:count files",
-    "infos.users" => ":count user|:count users",
+    "infos.files" => ":count&nbsp;file|:count&nbsp;files",
+    "infos.users" => ":count&nbsp;user|:count&nbsp;users",
     "infos.php" => "PHP Version: :version",
     "infos.post" => "Max post size: :size",
     "infos.upload" => "Max upload size: :size",
