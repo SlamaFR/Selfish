@@ -1,6 +1,7 @@
 require('./bootstrap');
 
 const routes = {
+    "files": "/files",
     "upload.delete": "/{mediaCode}/delete",
     "upload.toggle-visibility": "/{mediaCode}/toggle-visibility",
     "mode.toggle": "/mode/{mode}",
@@ -179,7 +180,7 @@ $(document).ready(function () {
             "_token": csrf_token
         }).done(function (response) {
             let children = $("#files-table").children().length;
-            if (children == 1 || children == mediaSelection) {
+            if (children == 1 || (children == mediaSelection && mediaSelection > 0)) {
                 location.reload();
             } else {
                 elem.parent().parent().parent().fadeOut(350, function () {

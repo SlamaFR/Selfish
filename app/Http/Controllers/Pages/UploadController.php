@@ -147,7 +147,11 @@ class UploadController extends Controller
         $user->save();
         $upload->delete();
 
-        return redirect('/')->withJson([
+        if (request()->getMethod() == 'GET') {
+            return redirect('/files');
+        }
+
+        return response()->json([
             'new_quota' => Files::humanFileSize($user->disk_quota),
             'max_quota' => Files::humanFileSize($maxQuota),
             'new_usage' => $maxQuota > 0 ? $user->disk_quota / $maxQuota : 0,
