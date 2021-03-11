@@ -79,7 +79,7 @@ use App\Models\User;
                                         @endif
                                     </td>
                                     <td style="max-width: 400px">{{ $file->media_name }}</td>
-                                    <td>{{ Files::humanFileSize(Storage::disk('public')->size($file->path())) }}</td>
+                                    <td>{!! Files::humanFileSize(Storage::disk('public')->size($file->path())) !!}</td>
                                     <td>{{ $file->owner->username }}</td>
                                     <td class="text-center" data-state="{{ $file->media_code }}">
                                         @if($file->visible)
