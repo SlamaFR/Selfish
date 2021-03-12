@@ -1,62 +1,58 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<h1 align="center">Selfish</h1>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## About Selfish
 
-## About Laravel
+Selfish is a private file hosting system built on Laravel. It allows you to upload and manage files of any type to your personnal server and share them with automatically generated short-link.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requirements
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Selfish requires PHP 7, Composer and NPM 12.0+ to be installed.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Installation
 
-## Learning Laravel
+```
+$ git clone https://github.com/SlamaFR/Selfish.git .
+$ composer install
+$ npm install
+$ npm run production
+$ php artisan key:generate
+$ php artisan route:cache
+$ php artisan view:cache
+```
+You finally need to fulfill the `.env` file with your host URL, database credentials and SMTP server information.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Troubleshooting
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+If you get a 500 error when trying to connect to Selfish, you should check rights and, if needed, change ownership of files with:
+```
+$ sudo chown -R www-data:www-data *
+```
+If this did not solved the issue, you might want to double check database credentials in `.env` file and database user permissions.
 
-## Laravel Sponsors
+Finally, if issue persists, you can set `APP_DEBUG` to `true` to display errors. You will be able to open an issue on this repository with error stack trace to get help.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## User Management
 
-### Premium Partners
+Selfish supports user managment with admin role and disk quota. Every user has its own settings such as media display preferences and automatic deletion.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+### Disk Quota
 
-## Contributing
+You can define a global disk quota, or a custom quota for each user, to manage space used by Selfish on disk. Every user can choose to let Selfish delete oldest files when disk quota is exceeded in order to make space for new files.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Admin Role
 
-## Code of Conduct
+Admin users can manage every other user and their files. Admins are able to change users password, promote, demote and delete anyone except super-user which is the first user created of ID 1. 
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Disclaimer: Super user cannot be deleted or demoted by anyone and should not be tampered from database!**
 
-## Security Vulnerabilities
+### Personnal Access token
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Each user has a unique access token used to upload files using their identity. This token should NOT be shared with anyone and can be regenerated in case of leak.
 
-## License
+## ShareX integration
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Selfish is meant to be used with ShareX! You can download a ShareX configuration on your settings page to easily integrate your Selfish server to ShareX. This integration requires a valid personnal access token.
+
+## Fork it!
+
+This application is highly inspired by [XBackBone](https://github.com/SergiX44/XBackBone), and so you can also fork this to tweak it as you want!
