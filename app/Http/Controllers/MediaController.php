@@ -8,6 +8,7 @@ use App\Models\Upload;
 use App\Helpers\Files;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Jenssegers\Agent\Facades\Agent;
 
 class MediaController extends Controller
 {
@@ -50,7 +51,7 @@ class MediaController extends Controller
 
         $type = Files::simplifyMimeType($file->media_type);
 
-        if($file->owner->settings()->get("display." . $type) === 'raw') {
+        if($file->owner->settings()->get("display." . $type) === 'raw' || Agent::isRobot()) {
             return $this->raw($mediaCode);
         }
 
