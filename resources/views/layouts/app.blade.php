@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ Config::get('app.name') }} &nbsp;&bull;&nbsp; {{ $title ?? '' }}</title>
+    <title>{!! ($title . ' &bull;') ?? '' !!} {{ Config::get('app.name') }}</title>
 
     <!-- Styles -->
     <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
