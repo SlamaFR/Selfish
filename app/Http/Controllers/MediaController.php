@@ -33,7 +33,10 @@ class MediaController extends Controller
             if (!Auth::user()->admin && Auth::user()->code !== $file->user_code) return abort(404);
         }
 
-        return Storage::disk('public')->response($file->path(), $file->media_name, ['Accept-Ranges' => 'bytes']);
+        return Storage::disk('public')->response($file->path(), $file->media_name, [
+            'Accept-Ranges' => 'bytes',
+            'Content-Type' => $file->media_type,
+        ]);
     }
 
     public function view($mediaCode)
