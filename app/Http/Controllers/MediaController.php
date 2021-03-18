@@ -54,12 +54,8 @@ class MediaController extends Controller
 
         $type = Files::simplifyMimeType($file->media_type);
 
-        if ($file->owner->settings()->get("display." . $type) === 'raw') {
+        if ($file->owner->settings()->get("display." . $type) === 'raw' || Agent::isRobot()) {
             return $this->raw($mediaCode);
-        }
-
-        if (Agent::isRobot()) {
-            return redirect(route('media.raw', ['mediaCode' => $mediaCode]));
         }
 
         return view('media', [
